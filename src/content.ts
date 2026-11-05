@@ -134,6 +134,12 @@ export async function readContent<T>(path: string): Promise<T> {
   throw new Error("Contenido no disponible.");
 }
 
+export function gradeQuestion(id: number, answer: number) {
+  const q = loadCatalog().questions.find(q => q.active && q.id === id);
+  if (!q || !Number.isInteger(answer) || answer < 0 || answer >= q.options.length) throw new Error("Selecciona una respuesta válida.");
+  return { id: q.id, correct: answer === q.correct_index, correct_answer: q.options[q.correct_index], explanation: q.explanation, place_slug: q.place__slug };
+}
+
 export function gradeQuiz(answers: Record<string, number>) {
   const questions = loadCatalog().questions.filter(q => q.active);
   const results = questions.map(q => {

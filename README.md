@@ -25,10 +25,12 @@ El build genera dist/. Un alojamiento estático debe devolver index.html en las 
 - Ocho lugares con búsqueda, filtros, fichas, afirmaciones y fuentes.
 - Mapa Leaflet con límite departamental local y dos ubicaciones verificadas.
 - Cuatro acontecimientos y cuatro rutas educativas.
-- Cuatro preguntas con calificación y explicaciones en el navegador.
+- Mini-quiz de cuatro preguntas, progreso, respuestas con feedback inmediato y explicación.
 - Generación y descarga de QR.
 - Editor JSON en /admin: validación, importación, exportación, guardado local y restauración.
-- Temas claro/oscuro, superficies glassmorphism, partículas decorativas y una ilustración 3D interactiva de la Catedral de León; las animaciones respetan la preferencia de movimiento reducido.
+- Temas claro/oscuro de alto contraste, navegación inferior móvil, fichas inferiores en el mapa y filtros por tema. Títulos clásicos y texto de interfaz legible; animaciones con movimiento reducido.
+- Línea del tiempo con anclas por año, ilustración de la Catedral y mapa local de León Viejo. El contexto completo sigue disponible.
+- PWA instalable con catálogo, imágenes y mapa básico local disponibles después de la primera carga completa de producción.
 
 El editor guarda cambios en localStorage de ese navegador y origen. No hay cuentas ni sincronización entre dispositivos. Para compartir cambios, exportar el catálogo, reemplazar src/data/catalog.json y compilar. Las respuestas de la actividad se incluyen en la aplicación; no es un examen protegido.
 
@@ -39,11 +41,15 @@ npx.cmd playwright install chromium
 npm.cmd run test:e2e
 ```
 
-Playwright inicia Vite automáticamente. No hay API que arrancar.
+Playwright inicia Vite en 5173 y una compilación de producción en 4173 automáticamente. No hay API que arrancar. Para usar Chrome instalado en Windows: `$env:PLAYWRIGHT_CHROMIUM_EXECUTABLE='C:\Program Files\Google\Chrome\Application\chrome.exe'`.
 
 ## Estructura
 
 - src/main.tsx: páginas, navegación y componentes React.
+- src/PlaceMap.tsx: mapa, pines accesibles y ficha inferior.
+- src/Quiz.tsx: actividad progresiva y feedback.
+- src/OfflineStatus.tsx: instalación del service worker y estado de conexión.
+- public/manifest.webmanifest y vite.config.ts: instalación PWA y generación de caché versionada.
 - src/content.ts: validación, lectura, almacenamiento y calificación.
 - src/ContentEditor.tsx: gestión local de contenidos.
 - src/types.ts: tipos del dominio.
@@ -56,7 +62,9 @@ Playwright inicia Vite automáticamente. No hay API que arrancar.
 
 ## Alcance
 
-Catálogo y actividad funcionan sin servicios externos una vez instalada y servida la aplicación. Mosaicos OpenStreetMap y enlaces a fuentes requieren Internet. No hay caché PWA. El QR no publica el sitio.
+La PWA funciona en producción con HTTPS o localhost. Tras el aviso «Guía guardada», el catálogo, cuestionario, imágenes incluidas y mapa básico (límite y dos lugares verificados) se pueden abrir y recargar sin conexión. Los mosaicos de calles OpenStreetMap y enlaces a fuentes requieren Internet; no se descargan regiones de mosaicos. Los archivos externos añadidos al catálogo no se guardan automáticamente. El navegador puede liberar almacenamiento, y la primera visita necesita conexión. El QR no publica el sitio.
+
+Para comprobarlo: ejecutar `npm.cmd run build`, después `npm.cmd run preview -- --port 4173`, abrir http://localhost:4173, esperar «Guía guardada», activar Offline en DevTools y recargar /explorar. La PWA está desactivada en el servidor de desarrollo para evitar versiones obsoletas. Después de publicar una actualización, cerrar todas las pestañas de la app y volver a abrirla permite activar la nueva caché.
 
 León Viejo y Catedral tienen revisión documental inicial; las otras seis fichas necesitan ampliación. Consulta directa de UNESCO y evaluación con estudiantes pendientes. Se conservan las fuentes y el estado de investigación original.
 

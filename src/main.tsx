@@ -7,14 +7,16 @@ import {
   Route as RouterRoute,
   Routes,
   useParams,
+  useLocation,
 } from "react-router-dom";
-import L from "leaflet";
-import department from "./data/leon-department.json";
-import type { GeoJsonObject } from "geojson";
-import type { Place, HistoricalEvent, Route, Question } from "./types";
+import type { Place, HistoricalEvent, Route } from "./types";
+import { PlaceMap } from "./PlaceMap";
+import { Quiz } from "./Quiz";
+import { OfflineStatus } from "./OfflineStatus";
+import territoryImage from "./assets/leon-territory.svg";
 import "leaflet/dist/leaflet.css";
 import "./style.css";
-import { readContent, gradeQuiz } from "./content";
+import { readContent } from "./content";
 import { ContentEditor } from "./ContentEditor";
 import cathedralImage from "./assets/catedral-leon.png";
 function useData<T>(path: string) {
@@ -63,9 +65,6 @@ function Status({ place }: { place: Place }) {
 function PlaceCard({ place }: { place: Place }) {
   return (
     <article className="card">
-      <div className="eyebrow">
-        {place.municipality} · {place.category}
-      </div>
       <h3>
         <Link to={"/lugares/" + place.slug}>{place.name}</Link>
       </h3>
@@ -77,121 +76,14 @@ function PlaceCard({ place }: { place: Place }) {
     </article>
   );
 }
-function ParticleField() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const context = canvas?.getContext("2d");
-    if (!canvas || !context) return;
-
-    const particles = Array.from({ length: 34 }, (_, index) => ({
-      x: ((index * 47) % 101) / 100,
-      y: ((index * 67) % 97) / 97,
-      radius: 1 + ((index * 13) % 16) / 10,
-      speed: 0.006 + ((index * 7) % 10) / 1200,
-      phase: index * 1.7,
-    }));
-    const reducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    let width = 0;
-    let height = 0;
-    let frame = -32;
-    let animationFrame = 0;
-
-    const resize = () => {
-      const bounds = canvas.getBoundingClientRect();
-      const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
-      width = bounds.width;
-      height = bounds.height;
-      canvas.width = Math.round(width * pixelRatio);
-      canvas.height = Math.round(height * pixelRatio);
-      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-    };
-
-    const draw = (timestamp: number) => {
-      if (timestamp - frame < 32) {
-        animationFrame = window.requestAnimationFrame(draw);
-        return;
-      }
-      frame = timestamp;
-      const elapsed = timestamp / 1000;
-      context.clearRect(0, 0, width, height);
-      for (const particle of particles) {
-        const x =
-          (particle.x + Math.sin(elapsed * 0.35 + particle.phase) * 0.012) *
-          width;
-        const y =
-          (((particle.y - elapsed * particle.speed + 1.1) % 1.1) - 0.05) *
-          height;
-        const glow = 0.25 + (Math.sin(elapsed + particle.phase) + 1) * 0.2;
-        context.beginPath();
-        context.fillStyle = `rgba(255, 222, 169, ${glow})`;
-        context.shadowBlur = particle.radius * 5;
-        context.shadowColor = "rgba(255, 213, 154, 0.7)";
-        context.arc(x, y, particle.radius, 0, Math.PI * 2);
-        context.fill();
-      }
-      context.shadowBlur = 0;
-      if (!reducedMotion) {
-        animationFrame = window.requestAnimationFrame(draw);
-      }
-    };
-
-    resize();
-    window.addEventListener("resize", resize);
-    draw(0);
-    return () => {
-      window.removeEventListener("resize", resize);
-      window.cancelAnimationFrame(animationFrame);
-    };
-  }, []);
-
-  return <canvas ref={canvasRef} className="particle-field" aria-hidden="true" />;
-}
-
 function CathedralArtwork() {
-  return (
-    <figure
-      className="cathedral-artwork"
-      onPointerMove={(event) => {
-        if (event.pointerType !== "mouse") return;
-        const bounds = event.currentTarget.getBoundingClientRect();
-        const x = (event.clientX - bounds.left) / bounds.width - 0.5;
-        const y = (event.clientY - bounds.top) / bounds.height - 0.5;
-        event.currentTarget.style.setProperty(
-          "--rotate-y",
-          `${x * 14}deg`,
-        );
-        event.currentTarget.style.setProperty(
-          "--rotate-x",
-          `${y * -12}deg`,
-        );
-      }}
-      onPointerLeave={(event) => {
-        event.currentTarget.style.setProperty("--rotate-x", "0deg");
-        event.currentTarget.style.setProperty("--rotate-y", "0deg");
-      }}
-    >
-      <span className="cathedral-orbit cathedral-orbit-one" />
-      <span className="cathedral-orbit cathedral-orbit-two" />
-      <img
-        src={cathedralImage}
-        alt="Ilustración tridimensional de la Catedral de León, Nicaragua"
-      />
-      <figcaption>Catedral de León · Nicaragua</figcaption>
-    </figure>
-  );
+  return <figure className="cathedral-artwork"><img src={cathedralImage} alt="Ilustración tridimensional de la Catedral de León, Nicaragua" /></figure>;
 }
-
 function Home() {
   return (
     <>
       <section className="hero hero-home">
-        <ParticleField />
         <div className="hero-copy">
-          <div className="eyebrow">Historia e Identidad Nacional · UNI</div>
           <h1>
             León
             <br />
@@ -216,7 +108,7 @@ function Home() {
       <section>
         <div className="section-heading">
           <h2>La memoria comienza con una pregunta</h2>
-          <span>01 / Explorar</span>
+          
         </div>
         <div className="grid">
           <article className="card">
@@ -257,90 +149,6 @@ function Home() {
     </>
   );
 }
-function PlaceMap({ places }: { places: Place[] }) {
-  const container = useRef<HTMLDivElement>(null);
-  const [failed, setFailed] = useState(false);
-  const mapped = places.filter(
-    (p) =>
-      p.latitude !== null &&
-      p.longitude !== null &&
-      p.coordinate_source?.verified,
-  );
-  useEffect(() => {
-    if (!container.current) return;
-    const map = L.map(container.current);
-    const boundary = L.geoJSON(department as GeoJsonObject, {
-      style: {
-        color: "#456952",
-        weight: 2,
-        fillColor: "#a9bc8d",
-        fillOpacity: 0.12,
-      },
-    }).addTo(map);
-    map.fitBounds(boundary.getBounds().pad(0.05));
-    const tiles = L.tileLayer(
-      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      {
-        attribution:
-          '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 19,
-      },
-    ).addTo(map);
-    tiles.on("tileerror", () => setFailed(true));
-    for (const p of mapped) {
-      const content = document.createElement("div");
-      const title = document.createElement("strong");
-      title.textContent = p.name;
-      const paragraph = document.createElement("p");
-      paragraph.textContent = p.municipality;
-      const link = document.createElement("a");
-      link.href = "/lugares/" + p.slug;
-      link.textContent = "Abrir ficha";
-      content.append(title, paragraph, link);
-      L.circleMarker([p.latitude!, p.longitude!], {
-        radius: 10,
-        color: "#a84d2b",
-        fillOpacity: 0.9,
-        className: "place-marker",
-      })
-        .bindPopup(content)
-        .addTo(map);
-    }
-    return () => {
-      map.remove();
-    };
-  }, [places]);
-  return (
-    <div className="map-panel">
-      <div className="section-heading">
-        <h2>Mapa de los lugares investigados</h2>
-        <span>{mapped.length} ubicaciones verificadas</span>
-      </div>
-      <div
-        ref={container}
-        className="map"
-        aria-label="Mapa interactivo del departamento de León con ubicaciones verificadas"
-      />
-      {!mapped.length && (
-        <p role="status">
-          No hay ubicaciones verificadas para este filtro. Consulta las fichas
-          desde la lista.
-        </p>
-      )}
-      {failed && (
-        <p role="status" className="notice">
-          No se pudieron cargar los mosaicos externos. Puedes abrir todas las
-          fichas desde la lista de lugares.
-        </p>
-      )}
-      <p className="small">
-        Límite departamental orientativo y ubicaciones: OpenStreetMap
-        contributors, ODbL 1.0. El límite se guarda localmente; los mosaicos
-        requieren conexión. No es cartografía catastral.
-      </p>
-    </div>
-  );
-}
 function Explore() {
   const state = useData<Place[]>("places/");
   const [q, setQ] = useState("");
@@ -364,7 +172,6 @@ function Explore() {
   return (
     <>
       <div className="page-title">
-        <div className="eyebrow">El territorio y su memoria</div>
         <h1>Explorar León</h1>
         <p>
           Un departamento, distintos espacios de historia. Consulta cada ficha y
@@ -393,19 +200,7 @@ function Explore() {
             ))}
           </select>
         </label>
-        <label>
-          Tema
-          <select
-            aria-label="Tema"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option value="">Todos los temas</option>
-            {[...new Set(all.map((p) => p.category))].map((x) => (
-              <option key={x}>{x}</option>
-            ))}
-          </select>
-        </label>
+
         {all.some((p) => p.period) && (
           <label>
             Período
@@ -423,6 +218,9 @@ function Explore() {
             </select>
           </label>
         )}
+      </div>
+<div className="filter-chips" role="group" aria-label="Filtrar por tema">
+        {["", ...new Set(all.map(p => p.category))].map(value => <button key={value} aria-pressed={category === value} onClick={() => setCategory(value)}>{value || "Todos los temas"}</button>)}
       </div>
       <PlaceMap places={filtered} />
       <h2>
@@ -450,9 +248,6 @@ function PlaceDetail() {
     <>
       <Link to="/explorar">← Volver al catálogo</Link>
       <div className="page-title">
-        <div className="eyebrow">
-          Departamento de León · Municipio de {p.municipality}
-        </div>
         <h1>{p.name}</h1>
         <Status place={p} />
       </div>
@@ -582,7 +377,6 @@ function Timeline() {
   return (
     <>
       <div className="page-title">
-        <div className="eyebrow">Acontecimientos con respaldo</div>
         <h1>León a través del tiempo</h1>
         <p>
           Relaciona las fechas con los lugares y consulta la fuente de cada
@@ -611,13 +405,15 @@ function Timeline() {
           supuestas.
         </div>
       ) : (
-        <ol className="timeline">
+        <><nav className="timeline-anchors" aria-label="Saltar a un acontecimiento">{events.map(e => <a key={e.id} href={"#evento-" + e.id}>{e.year}</a>)}</nav><ol className="timeline">
           {events.map((e) => (
-            <li key={e.id}>
+            <li key={e.id} id={"evento-" + e.id}>
               <span className="year">{e.year}</span>
+              <img className="timeline-image" src={e.place_slug === "catedral" ? cathedralImage : territoryImage} alt={e.place_slug === "catedral" ? "Ilustración de la Catedral de León" : "Mapa del departamento con la ubicación de León Viejo"} loading="lazy" />
               <div>
                 <h2>{e.title}</h2>
-                <p>{e.description}</p>
+                <p className="clamp-three">{e.description}</p>
+                <details className="event-description"><summary>Leer contexto completo</summary><p>{e.description}</p></details>
                 <Link to={"/lugares/" + e.place_slug}>
                   Abrir ficha de {e.place_name} →
                 </Link>
@@ -627,7 +423,7 @@ function Timeline() {
               </div>
             </li>
           ))}
-        </ol>
+        </ol></>
       )}
     </>
   );
@@ -638,7 +434,6 @@ function RouteList() {
   return (
     <>
       <div className="page-title">
-        <div className="eyebrow">Aprender paso a paso</div>
         <h1>Rutas temáticas digitales</h1>
         <p>
           Recorridos educativos por las fichas. No son indicaciones de traslado
@@ -689,7 +484,7 @@ function RouteDetail() {
           />
           <PlaceCard place={stop.place} />
           <p className="notice">Para reflexionar: {stop.prompt}</p>
-          <div className="actions">
+          <div className="actions route-actions">
             <button disabled={step === 0} onClick={() => setStep(step - 1)}>
               Anterior
             </button>
@@ -706,103 +501,6 @@ function RouteDetail() {
         </>
       ) : (
         <p>Esta ruta aún no tiene paradas.</p>
-      )}
-    </>
-  );
-}
-function Quiz() {
-  const state = useData<Question[]>("questions/");
-  const [answers, setAnswers] = useState<Record<string, number>>({});
-  const [result, setResult] = useState<{
-    score: number;
-    total: number;
-    results: {
-      id: number;
-      correct: boolean;
-      correct_answer: string;
-      explanation: string;
-      place_slug: string;
-    }[];
-  }>();
-  const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
-  if (!state.data) return <State {...state} />;
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setBusy(true);
-    setError("");
-    try {
-      setResult(
-        gradeQuiz(answers),
-      );
-    } catch (e) {
-      setError((e as Error).message);
-    } finally {
-      setBusy(false);
-    }
-  };
-  return (
-    <>
-      <div className="page-title">
-        <div className="eyebrow">Comprender y comprobar</div>
-        <h1>Pon a prueba tu recorrido</h1>
-        <p>
-          La actividad combina lectura crítica y preguntas basadas en las fichas
-          de León Viejo y la Catedral. Consulta sus fuentes para comprender las
-          respuestas.
-        </p>
-      </div>
-      {result ? (
-        <section className="card" aria-live="polite">
-          <h2>
-            Resultado: {result.score} de {result.total}
-          </h2>
-          {result.results.map((x) => (
-            <div className="claim" key={x.id}>
-              <strong>
-                {x.correct ? "Respuesta correcta" : "Revisa tu respuesta"}:{" "}
-                {x.correct_answer}
-              </strong>
-              <p>{x.explanation}</p>
-              <Link to={"/lugares/" + x.place_slug}>Consultar la ficha</Link>
-            </div>
-          ))}
-          <button
-            onClick={() => {
-              setResult(undefined);
-              setAnswers({});
-            }}
-          >
-            Repetir actividad
-          </button>
-        </section>
-      ) : (
-        <form onSubmit={submit}>
-          {state.data.map((q, i) => (
-            <fieldset className="card" key={q.id}>
-              <legend>
-                {i + 1}. {q.prompt}
-              </legend>
-              {q.options.map((text, index) => (
-                <label className="radio" key={index}>
-                  <input
-                    type="radio"
-                    name={"question-" + q.id}
-                    value={index}
-                    required
-                    checked={answers[q.id] === index}
-                    onChange={() => setAnswers({ ...answers, [q.id]: index })}
-                  />
-                  {text}
-                </label>
-              ))}
-            </fieldset>
-          ))}
-          {error && <p role="alert">{error}</p>}
-          <button disabled={busy || !state.data.length}>
-            {busy ? "Evaluando…" : "Finalizar actividad"}
-          </button>
-        </form>
       )}
     </>
   );
@@ -875,13 +573,16 @@ function Fair() {
     </>
   );
 }
+function ScrollToPage() {
+  const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo({ top: 0, behavior: "instant" }); }, [pathname]);
+  return null;
+}
 function App() {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     const savedTheme = window.localStorage.getItem("leon-theme");
     if (savedTheme === "light" || savedTheme === "dark") return savedTheme;
-    return window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
+    return "light";
   });
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -890,6 +591,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToPage />
       <a className="skip" href="#main">
         Saltar al contenido
       </a>
@@ -901,10 +603,9 @@ function App() {
           <nav aria-label="Navegación principal">
             {[
               ["/explorar", "Explorar"],
-              ["/tiempo", "Línea del tiempo"],
+              ["/tiempo", "Historia"],
               ["/rutas", "Rutas"],
-              ["/actividad", "Actividad"],
-              ["/feria", "Feria"],
+              ["/actividad", "Quiz"],
             ].map(([to, label]) => (
               <NavLink key={to} to={to}>
                 {label}
@@ -917,11 +618,12 @@ function App() {
             aria-label={`Cambiar a tema ${theme === "light" ? "oscuro" : "claro"}`}
             onClick={() => setTheme(theme === "light" ? "dark" : "light")}
           >
-            {theme === "light" ? "☾ Oscuro" : "☀ Claro"}
+            {theme === "light" ? "Modo oscuro" : "Modo claro"}
           </button>
         </div>
       </header>
       <main id="main">
+        <OfflineStatus />
         <Routes>
           <RouterRoute path="/" element={<Home />} />
           <RouterRoute path="/explorar" element={<Explore />} />
@@ -952,7 +654,7 @@ function App() {
           <br />
           Memoria con fuentes, tecnología con propósito.
         </p>
-        <Link to="/admin">Administrar contenidos locales</Link>
+        <div className="footer-links"><Link to="/feria">Preparar feria y QR</Link><Link to="/admin">Administrar contenidos locales</Link></div>
       </footer>
     </BrowserRouter>
   );

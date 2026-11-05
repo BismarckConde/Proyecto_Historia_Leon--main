@@ -20,7 +20,13 @@ npm.cmd run test:e2e
 npm.cmd run preview -- --port 4173
 ```
 
-El build valida TypeScript y genera dist/. Playwright inicia Vite en 5173. PLAYWRIGHT_CHROMIUM_EXECUTABLE permite seleccionar un Chromium ya instalado.
+El build valida TypeScript y genera dist/, incluido el service worker con los recursos locales. Playwright inicia Vite en 5173 y build/preview en 4173 para probar la PWA. PLAYWRIGHT_CHROMIUM_EXECUTABLE permite seleccionar un Chromium ya instalado.
+
+## Probar la PWA
+
+Ejecutar build y preview, abrir http://localhost:4173 y esperar «Guía guardada». En DevTools activar Offline, abrir /explorar y recargar: deben aparecer las fichas, el límite departamental y los dos pines. Las calles externas no se descargan. Volver a Online restaura el proveedor de mosaicos.
+
+Usar HTTPS en el teléfono: una dirección IP LAN por HTTP permite consultar la página, pero no registrar el service worker. La primera visita requiere conexión. El navegador puede eliminar la caché para recuperar espacio; al volver con conexión se prepara de nuevo. Una actualización se activa al cerrar todas las pestañas de la versión anterior y volver a abrir la app. Los datos del editor en localStorage se mantienen separados de esta caché.
 
 ## Datos y respaldos
 

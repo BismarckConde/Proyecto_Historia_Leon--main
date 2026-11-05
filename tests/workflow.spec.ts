@@ -27,7 +27,7 @@ test("tema claro y oscuro se alternan y se conservan", async ({ page }) => {
   await page.getByRole("button", { name: "Cambiar a tema claro" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
 });
-test("ilustración 3D, partículas y movimiento reducido", async ({ page }) => {
+test("ilustración local y movimiento reducido", async ({ page }) => {
   await page.goto("/");
   const cathedral = page.getByRole("img", {
     name: "Ilustración tridimensional de la Catedral de León, Nicaragua",
@@ -40,16 +40,6 @@ test("ilustración 3D, partículas y movimiento reducido", async ({ page }) => {
       ),
     )
     .toBe(true);
-  await expect(page.locator(".particle-field")).toBeVisible();
-
-  const artwork = page.locator(".cathedral-artwork");
-  await artwork.hover({ position: { x: 8, y: 8 } });
-  await expect
-    .poll(() =>
-      artwork.evaluate((element) => element.style.getPropertyValue("--rotate-y")),
-    )
-    .not.toBe("0deg");
-
   await page.emulateMedia({ reducedMotion: "reduce" });
   await expect
     .poll(() =>
@@ -76,23 +66,19 @@ test("filtro municipal y ruta digital reales", async ({ page }) => {
 });
 test("actividad calificada localmente", async ({ page }) => {
   await page.goto("/actividad");
-  await page.getByLabel("Como investigación por verificar").check();
-  await page.getByLabel("Mediante la lista de lugares").check();
-  await page.getByLabel("1524", { exact: true }).check();
-  await page.getByLabel("Rubén Darío", { exact: true }).check();
-  await page.getByRole("button", { name: "Finalizar actividad" }).click();
-  await expect(
-    page.getByRole("heading", { name: "Resultado: 4 de 4" }),
-  ).toBeVisible();
+  for (const option of ["Como investigación por verificar", "Mediante la lista de lugares", "1524", "Rubén Darío"]) {
+    await page.getByRole("button", { name: option, exact: true }).click();
+    await expect(page.locator(".quiz-feedback")).toContainText("¡Respuesta correcta!");
+    await page.getByRole("button", { name: /Siguiente pregunta|Finalizar actividad/ }).click();
+  }
+  await expect(page.getByRole("heading", { name: "Resultado: 4 de 4" })).toBeVisible();
   await page.getByRole("button", { name: "Repetir actividad" }).click();
-  await page.getByLabel("Como un hecho histórico demostrado").check();
-  await page.getByLabel("No se pueden consultar").check();
-  await page.getByLabel("1967", { exact: true }).check();
-  await page.getByLabel("José de la Cruz Mena", { exact: true }).check();
-  await page.getByRole("button", { name: "Finalizar actividad" }).click();
-  await expect(
-    page.getByRole("heading", { name: "Resultado: 0 de 4" }),
-  ).toBeVisible();
+  for (const option of ["Como un hecho histórico demostrado", "No se pueden consultar", "1967", "José de la Cruz Mena"]) {
+    await page.getByRole("button", { name: option, exact: true }).click();
+    await expect(page.locator(".quiz-feedback")).toContainText("Esta vez no");
+    await page.getByRole("button", { name: /Siguiente pregunta|Finalizar actividad/ }).click();
+  }
+  await expect(page.getByRole("heading", { name: "Resultado: 0 de 4" })).toBeVisible();
 });
 test("línea del tiempo declara el contenido pendiente", async ({ page }) => {
   await page.addInitScript(({ key, data }) => {
@@ -115,7 +101,7 @@ test("mapa, mosaicos fallidos y línea del tiempo con datos reales del catálogo
   await expect(page.locator(".place-marker")).toHaveCount(2);
   await page.locator(".place-marker").first().click();
   await page
-    .locator(".leaflet-popup")
+    .locator(".map-sheet")
     .getByRole("link", { name: "Abrir ficha" })
     .click();
   await expect(
@@ -151,7 +137,7 @@ test("edición local, persistencia, exportación y restauración", async ({ page
   edited.places[0].name = "León Viejo editado";
   await page.getByLabel("Catálogo JSON", { exact: true }).fill(JSON.stringify(edited));
   await page.getByRole("button", { name: "Guardar cambios" }).click();
-  await expect(page.getByRole("status")).toContainText("Cambios guardados");
+  await expect(page.getByRole("status").filter({ hasText: "Cambios guardados" })).toBeVisible();
   await page.goto("/lugares/leon-viejo");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("León Viejo editado");
   await page.reload();
