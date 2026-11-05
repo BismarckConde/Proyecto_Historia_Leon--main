@@ -1,0 +1,783 @@
+{
+  "version": 1,
+  "places": [
+    {
+      "id": 1,
+      "name": "Ruinas de León Viejo",
+      "slug": "leon-viejo",
+      "municipality": "La Paz Centro",
+      "category": "Arqueología",
+      "period": "Siglo XVI",
+      "review_status": "reviewed",
+      "latitude": 12.4005781,
+      "longitude": -86.6177931,
+      "description": "Las ruinas de León Viejo permiten investigar el asentamiento original de la ciudad de León. Mapa Nacional de Turismo ubica el sitio en Puerto Momotombo, en su sección de arquitectura de La Paz Centro.",
+      "context": "La fuente institucional sitúa la fundación de la ciudad original en 1524 y el redescubrimiento de las ruinas en 1967. El recorrido arqueológico permite distinguir este asentamiento de la ciudad actual de León.",
+      "significance": "La publicación Ciudades Patrimoniales de Mapa Nacional de Turismo registra su reconocimiento por UNESCO en 2000. Es un punto de partida para estudiar las transformaciones del territorio y la memoria colonial; la interpretación se ampliará con documentación primaria.",
+      "sources": [
+        {
+          "id": 1,
+          "title": "Ruins of León Viejo",
+          "institution": "UNESCO · Centro del Patrimonio Mundial",
+          "url": "https://whc.unesco.org/en/list/613/",
+          "verified": false,
+          "accessed_on": null,
+          "publication_date": "",
+          "notes": "Referencia institucional identificada; el acceso directo devolvió una pantalla de comprobación en vez del texto. Pendiente de consultar el registro primario y contrastar el contenido citado de INTUR."
+        },
+        {
+          "id": 4,
+          "title": "Arquitectura de La Paz Centro",
+          "institution": "Mapa Nacional de Turismo · INTUR",
+          "url": "https://www.mapanicaragua.com/arquitectura-de-la-paz-centro/",
+          "publication_date": "2020-07-21 (metadatos del portal)",
+          "accessed_on": "2026-10-02",
+          "verified": true,
+          "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+        },
+        {
+          "id": 5,
+          "title": "Ciudades Patrimoniales",
+          "institution": "Mapa Nacional de Turismo · INTUR",
+          "url": "https://www.mapanicaragua.com/portfolio-items/ciudades-patrimoniales/",
+          "publication_date": "2022-02-18 (metadatos del portal)",
+          "accessed_on": "2026-10-02",
+          "verified": true,
+          "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+        },
+        {
+          "id": 3,
+          "title": "Municipio de Léon",
+          "institution": "Mapa Nacional de Turismo · INTUR",
+          "url": "https://www.mapanicaragua.com/municipio-de-leon/",
+          "publication_date": "2020-04-27 (metadatos del portal)",
+          "accessed_on": "2026-10-02",
+          "verified": true,
+          "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+        },
+        {
+          "id": 6,
+          "title": "León Viejo · registro cartográfico OSM",
+          "institution": "OpenStreetMap contributors · Nominatim",
+          "url": "https://www.openstreetmap.org/node/1995471042",
+          "publication_date": "",
+          "accessed_on": "2026-10-02",
+          "verified": true,
+          "notes": "Ubicación consultada en Nominatim; se eligió el objeto del sitio, no el centro municipal. Municipio y departamento coinciden con la ubicación institucional. Coordenadas WGS84, grados decimales. ODbL 1.0; atribución OpenStreetMap contributors. No es un levantamiento topográfico."
+        }
+      ],
+      "claims": [
+        {
+          "text": "Mapa Nacional de Turismo ubica las ruinas en el poblado de Puerto Momotombo, dentro de su ficha Arquitectura de La Paz Centro.",
+          "source": {
+            "id": 4,
+            "title": "Arquitectura de La Paz Centro",
+            "institution": "Mapa Nacional de Turismo · INTUR",
+            "url": "https://www.mapanicaragua.com/arquitectura-de-la-paz-centro/",
+            "publication_date": "2020-07-21 (metadatos del portal)",
+            "accessed_on": "2026-10-02",
+            "verified": true,
+            "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+          },
+          "locator": "Sección «Ruinas de León Viejo»",
+          "kind": "fact",
+          "id": 1
+        },
+        {
+          "text": "La fuente institucional identifica 1524 como año de fundación de la ciudad original y 1967 como año de redescubrimiento de las ruinas.",
+          "source": {
+            "id": 4,
+            "title": "Arquitectura de La Paz Centro",
+            "institution": "Mapa Nacional de Turismo · INTUR",
+            "url": "https://www.mapanicaragua.com/arquitectura-de-la-paz-centro/",
+            "publication_date": "2020-07-21 (metadatos del portal)",
+            "accessed_on": "2026-10-02",
+            "verified": true,
+            "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+          },
+          "locator": "Sección «Ruinas de León Viejo», primer párrafo",
+          "kind": "fact",
+          "id": 2
+        },
+        {
+          "text": "La publicación Ciudades Patrimoniales atribuye a UNESCO la declaración patrimonial de León Viejo en 2000. Falta consultar directamente el registro UNESCO.",
+          "source": {
+            "id": 5,
+            "title": "Ciudades Patrimoniales",
+            "institution": "Mapa Nacional de Turismo · INTUR",
+            "url": "https://www.mapanicaragua.com/portfolio-items/ciudades-patrimoniales/",
+            "publication_date": "2022-02-18 (metadatos del portal)",
+            "accessed_on": "2026-10-02",
+            "verified": true,
+            "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+          },
+          "locator": "Párrafo introductorio",
+          "kind": "fact",
+          "id": 3
+        }
+      ],
+      "coordinate_source": {
+        "id": 6,
+        "title": "León Viejo · registro cartográfico OSM",
+        "institution": "OpenStreetMap contributors · Nominatim",
+        "url": "https://www.openstreetmap.org/node/1995471042",
+        "publication_date": "",
+        "accessed_on": "2026-10-02",
+        "verified": true,
+        "notes": "Ubicación consultada en Nominatim; se eligió el objeto del sitio, no el centro municipal. Municipio y departamento coinciden con la ubicación institucional. Coordenadas WGS84, grados decimales. ODbL 1.0; atribución OpenStreetMap contributors. No es un levantamiento topográfico."
+      },
+      "media": []
+    },
+    {
+      "id": 2,
+      "name": "Catedral de León",
+      "slug": "catedral",
+      "municipality": "León",
+      "category": "Arquitectura",
+      "period": "Época colonial",
+      "review_status": "reviewed",
+      "latitude": 12.434982,
+      "longitude": -86.8781023,
+      "description": "La Catedral de León es un espacio de patrimonio arquitectónico y memoria cultural ubicado en la ciudad de León. La ficha municipal de Mapa Nacional de Turismo describe la transición del barroco al neoclásico en su construcción.",
+      "context": "La fuente institucional describe una planta rectangular, cinco naves y elementos barrocos y neoclásicos. Para esta primera revisión se evita fijar fechas de construcción antes de contrastarlas con el registro patrimonial primario.",
+      "significance": "La Catedral relaciona arquitectura, arte religioso y memoria literaria: Mapa Nacional de Turismo señala que Rubén Darío está sepultado en el templo y registra su reconocimiento patrimonial mundial en 2011.",
+      "sources": [
+        {
+          "id": 2,
+          "title": "León Cathedral",
+          "institution": "UNESCO · Centro del Patrimonio Mundial",
+          "url": "https://whc.unesco.org/en/list/1236/",
+          "verified": false,
+          "accessed_on": null,
+          "publication_date": "",
+          "notes": "Referencia institucional identificada; el acceso directo devolvió una pantalla de comprobación en vez del texto. Pendiente de consultar el registro primario y contrastar el contenido citado de INTUR."
+        },
+        {
+          "id": 3,
+          "title": "Municipio de Léon",
+          "institution": "Mapa Nacional de Turismo · INTUR",
+          "url": "https://www.mapanicaragua.com/municipio-de-leon/",
+          "publication_date": "2020-04-27 (metadatos del portal)",
+          "accessed_on": "2026-10-02",
+          "verified": true,
+          "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+        },
+        {
+          "id": 5,
+          "title": "Ciudades Patrimoniales",
+          "institution": "Mapa Nacional de Turismo · INTUR",
+          "url": "https://www.mapanicaragua.com/portfolio-items/ciudades-patrimoniales/",
+          "publication_date": "2022-02-18 (metadatos del portal)",
+          "accessed_on": "2026-10-02",
+          "verified": true,
+          "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+        },
+        {
+          "id": 7,
+          "title": "Catedral de León · registro cartográfico OSM",
+          "institution": "OpenStreetMap contributors · Nominatim",
+          "url": "https://www.openstreetmap.org/way/660182420",
+          "publication_date": "",
+          "accessed_on": "2026-10-02",
+          "verified": true,
+          "notes": "Ubicación consultada en Nominatim; se eligió el objeto del sitio, no el centro municipal. Municipio y departamento coinciden con la ubicación institucional. Coordenadas WGS84, grados decimales. ODbL 1.0; atribución OpenStreetMap contributors. No es un levantamiento topográfico."
+        }
+      ],
+      "claims": [
+        {
+          "text": "La descripción institucional caracteriza la construcción de la Catedral como una transición de lo barroco a lo neoclásico.",
+          "source": {
+            "id": 3,
+            "title": "Municipio de Léon",
+            "institution": "Mapa Nacional de Turismo · INTUR",
+            "url": "https://www.mapanicaragua.com/municipio-de-leon/",
+            "publication_date": "2020-04-27 (metadatos del portal)",
+            "accessed_on": "2026-10-02",
+            "verified": true,
+            "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+          },
+          "locator": "Arquitectura → Catedral de León",
+          "kind": "fact",
+          "id": 4
+        },
+        {
+          "text": "Mapa Nacional de Turismo señala que el poeta Rubén Darío está sepultado en la Catedral de León.",
+          "source": {
+            "id": 3,
+            "title": "Municipio de Léon",
+            "institution": "Mapa Nacional de Turismo · INTUR",
+            "url": "https://www.mapanicaragua.com/municipio-de-leon/",
+            "publication_date": "2020-04-27 (metadatos del portal)",
+            "accessed_on": "2026-10-02",
+            "verified": true,
+            "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+          },
+          "locator": "Arquitectura → Catedral de León, párrafo sobre sepulturas",
+          "kind": "fact",
+          "id": 5
+        },
+        {
+          "text": "Mapa Nacional de Turismo registra 2011 como el año de reconocimiento de la Catedral por UNESCO; el registro primario permanece por consultar.",
+          "source": {
+            "id": 5,
+            "title": "Ciudades Patrimoniales",
+            "institution": "Mapa Nacional de Turismo · INTUR",
+            "url": "https://www.mapanicaragua.com/portfolio-items/ciudades-patrimoniales/",
+            "publication_date": "2022-02-18 (metadatos del portal)",
+            "accessed_on": "2026-10-02",
+            "verified": true,
+            "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+          },
+          "locator": "Párrafo introductorio",
+          "kind": "fact",
+          "id": 6
+        }
+      ],
+      "coordinate_source": {
+        "id": 7,
+        "title": "Catedral de León · registro cartográfico OSM",
+        "institution": "OpenStreetMap contributors · Nominatim",
+        "url": "https://www.openstreetmap.org/way/660182420",
+        "publication_date": "",
+        "accessed_on": "2026-10-02",
+        "verified": true,
+        "notes": "Ubicación consultada en Nominatim; se eligió el objeto del sitio, no el centro municipal. Municipio y departamento coinciden con la ubicación institucional. Coordenadas WGS84, grados decimales. ODbL 1.0; atribución OpenStreetMap contributors. No es un levantamiento topográfico."
+      },
+      "media": []
+    },
+    {
+      "id": 3,
+      "name": "Museo y Archivo Rubén Darío",
+      "slug": "ruben-dario",
+      "municipality": "León",
+      "category": "Literatura",
+      "period": "",
+      "review_status": "pending",
+      "latitude": null,
+      "longitude": null,
+      "description": "Según Mapa Nacional de Turismo, el Museo Archivo Rubén Darío conserva manuscritos, primeras ediciones, documentos, objetos personales y fotografías del poeta.",
+      "context": "La ficha institucional vincula la casa con la infancia de Darío. Se necesita consultar UNAN-León y el museo para ampliar antecedentes y criterios de conservación del archivo.",
+      "significance": "Su colección ofrece una entrada documental a la memoria literaria. No se confunde este museo de León con la casa natal de Ciudad Darío.",
+      "sources": [
+        {
+          "id": 3,
+          "title": "Municipio de Léon",
+          "institution": "Mapa Nacional de Turismo · INTUR",
+          "url": "https://www.mapanicaragua.com/municipio-de-leon/",
+          "publication_date": "2020-04-27 (metadatos del portal)",
+          "accessed_on": "2026-10-02",
+          "verified": true,
+          "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+        }
+      ],
+      "claims": [
+        {
+          "text": "La ficha municipal describe una colección de manuscritos, primeras ediciones, documentos, objetos personales y fotografías de Rubén Darío.",
+          "source": {
+            "id": 3,
+            "title": "Municipio de Léon",
+            "institution": "Mapa Nacional de Turismo · INTUR",
+            "url": "https://www.mapanicaragua.com/municipio-de-leon/",
+            "publication_date": "2020-04-27 (metadatos del portal)",
+            "accessed_on": "2026-10-02",
+            "verified": true,
+            "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+          },
+          "locator": "Arquitectura → Museo Archivo Rubén Darío",
+          "kind": "fact",
+          "id": 7
+        }
+      ],
+      "coordinate_source": null,
+      "media": []
+    },
+    {
+      "id": 4,
+      "name": "Barrio y patrimonio cultural de Sutiaba",
+      "slug": "sutiaba",
+      "municipality": "León",
+      "category": "Memoria y tradiciones",
+      "period": "",
+      "review_status": "pending",
+      "latitude": null,
+      "longitude": null,
+      "description": "Mapa Nacional de Turismo identifica las alfombras de aserrín de Semana Santa en Sutiaba como una expresión de arte religioso y participación familiar.",
+      "context": "La investigación abordará la historia de la comunidad y su patrimonio material e inmaterial. No se han recopilado testimonios ni se atribuyen interpretaciones a integrantes de la comunidad.",
+      "significance": "Las prácticas artísticas y comunitarias permiten investigar memoria e identidad, respetando las voces de sus participantes y distinguiendo descripción institucional de testimonio directo.",
+      "sources": [
+        {
+          "id": 3,
+          "title": "Municipio de Léon",
+          "institution": "Mapa Nacional de Turismo · INTUR",
+          "url": "https://www.mapanicaragua.com/municipio-de-leon/",
+          "publication_date": "2020-04-27 (metadatos del portal)",
+          "accessed_on": "2026-10-02",
+          "verified": true,
+          "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+        }
+      ],
+      "claims": [
+        {
+          "text": "La fuente institucional describe la elaboración de alfombras de aserrín en Sutiaba durante Semana Santa, con escenas de la Pasión, Muerte y Resurrección de Cristo.",
+          "source": {
+            "id": 3,
+            "title": "Municipio de Léon",
+            "institution": "Mapa Nacional de Turismo · INTUR",
+            "url": "https://www.mapanicaragua.com/municipio-de-leon/",
+            "publication_date": "2020-04-27 (metadatos del portal)",
+            "accessed_on": "2026-10-02",
+            "verified": true,
+            "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+          },
+          "locator": "Cultura y Festividades Religiosas → Semana Santa leonesa",
+          "kind": "fact",
+          "id": 8
+        }
+      ],
+      "coordinate_source": null,
+      "media": []
+    },
+    {
+      "id": 5,
+      "name": "Iglesia de San Juan Bautista de Sutiaba",
+      "slug": "san-juan",
+      "municipality": "León",
+      "category": "Arquitectura",
+      "period": "",
+      "review_status": "pending",
+      "latitude": null,
+      "longitude": null,
+      "description": "La descripción institucional de San Juan Bautista de Sutiaba destaca su frontispicio de influencia barroca y una planta en cruz latina.",
+      "context": "El estudio de su relación con la comunidad requiere ampliar las fuentes documentales y consultar a sus responsables; esa investigación sigue pendiente.",
+      "significance": "Permite explorar el patrimonio arquitectónico de Sutiaba sin reducir la historia comunitaria a un solo edificio.",
+      "sources": [
+        {
+          "id": 3,
+          "title": "Municipio de Léon",
+          "institution": "Mapa Nacional de Turismo · INTUR",
+          "url": "https://www.mapanicaragua.com/municipio-de-leon/",
+          "publication_date": "2020-04-27 (metadatos del portal)",
+          "accessed_on": "2026-10-02",
+          "verified": true,
+          "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+        }
+      ],
+      "claims": [
+        {
+          "text": "Mapa Nacional de Turismo describe un frontispicio de influencia barroca y una planta en cruz latina en San Juan Bautista de Sutiaba.",
+          "source": {
+            "id": 3,
+            "title": "Municipio de Léon",
+            "institution": "Mapa Nacional de Turismo · INTUR",
+            "url": "https://www.mapanicaragua.com/municipio-de-leon/",
+            "publication_date": "2020-04-27 (metadatos del portal)",
+            "accessed_on": "2026-10-02",
+            "verified": true,
+            "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+          },
+          "locator": "Arquitectura → Iglesia San Juan Bautista de Sutiaba",
+          "kind": "fact",
+          "id": 9
+        }
+      ],
+      "coordinate_source": null,
+      "media": []
+    },
+    {
+      "id": 6,
+      "name": "Museo de Leyendas y Tradiciones Coronel Joaquín de Arrechavala",
+      "slug": "leyendas",
+      "municipality": "León",
+      "category": "Memoria y tradiciones",
+      "period": "",
+      "review_status": "pending",
+      "latitude": null,
+      "longitude": null,
+      "description": "Mapa Nacional de Turismo presenta el museo como un espacio que recrea personajes de mitos y leyendas mediante figuras y esculturas de artesanos locales.",
+      "context": "La fuente distingue el edificio, descrito como la antigua Cárcel La 21, del contenido de tradición oral expuesto. Falta contrastar su trayectoria con archivos y responsables del museo.",
+      "significance": "El espacio permite abordar memoria oral y memoria del edificio. Los personajes legendarios son relatos culturales, no pruebas de acontecimientos sobrenaturales.",
+      "sources": [
+        {
+          "id": 3,
+          "title": "Municipio de Léon",
+          "institution": "Mapa Nacional de Turismo · INTUR",
+          "url": "https://www.mapanicaragua.com/municipio-de-leon/",
+          "publication_date": "2020-04-27 (metadatos del portal)",
+          "accessed_on": "2026-10-02",
+          "verified": true,
+          "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+        }
+      ],
+      "claims": [
+        {
+          "text": "La ficha institucional describe estaciones dedicadas a mitos y leyendas recreadas con figuras y esculturas de artesanos locales.",
+          "source": {
+            "id": 3,
+            "title": "Municipio de Léon",
+            "institution": "Mapa Nacional de Turismo · INTUR",
+            "url": "https://www.mapanicaragua.com/municipio-de-leon/",
+            "publication_date": "2020-04-27 (metadatos del portal)",
+            "accessed_on": "2026-10-02",
+            "verified": true,
+            "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+          },
+          "locator": "Arquitectura → Museo de Mitos, leyendas y tradiciones Coronel Joaquín de Arrechavala",
+          "kind": "fact",
+          "id": 10
+        },
+        {
+          "text": "Mapa Nacional de Turismo identifica el edificio del museo como una antigua prisión llamada Cárcel La 21.",
+          "source": {
+            "id": 3,
+            "title": "Municipio de Léon",
+            "institution": "Mapa Nacional de Turismo · INTUR",
+            "url": "https://www.mapanicaragua.com/municipio-de-leon/",
+            "publication_date": "2020-04-27 (metadatos del portal)",
+            "accessed_on": "2026-10-02",
+            "verified": true,
+            "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+          },
+          "locator": "Sección del museo, segundo párrafo",
+          "kind": "fact",
+          "id": 11
+        }
+      ],
+      "coordinate_source": null,
+      "media": []
+    },
+    {
+      "id": 7,
+      "name": "Iglesia de La Recolección",
+      "slug": "recoleccion",
+      "municipality": "León",
+      "category": "Arquitectura",
+      "period": "",
+      "review_status": "pending",
+      "latitude": null,
+      "longitude": null,
+      "description": "La ficha institucional de La Recolección destaca su fachada labrada en cantería, de estilo barroco mexicano, y altares de estilo neoclásico.",
+      "context": "La investigación comparará la descripción arquitectónica con documentos del templo y fuentes patrimoniales antes de ampliar su cronología.",
+      "significance": "Es un caso para estudiar lenguajes arquitectónicos y patrimonio religioso en la ciudad de León.",
+      "sources": [
+        {
+          "id": 3,
+          "title": "Municipio de Léon",
+          "institution": "Mapa Nacional de Turismo · INTUR",
+          "url": "https://www.mapanicaragua.com/municipio-de-leon/",
+          "publication_date": "2020-04-27 (metadatos del portal)",
+          "accessed_on": "2026-10-02",
+          "verified": true,
+          "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+        }
+      ],
+      "claims": [
+        {
+          "text": "Mapa Nacional de Turismo describe la fachada de La Recolección como barroca mexicana y sus altares como neoclásicos.",
+          "source": {
+            "id": 3,
+            "title": "Municipio de Léon",
+            "institution": "Mapa Nacional de Turismo · INTUR",
+            "url": "https://www.mapanicaragua.com/municipio-de-leon/",
+            "publication_date": "2020-04-27 (metadatos del portal)",
+            "accessed_on": "2026-10-02",
+            "verified": true,
+            "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+          },
+          "locator": "Arquitectura → Iglesia La Recolección",
+          "kind": "fact",
+          "id": 12
+        }
+      ],
+      "coordinate_source": null,
+      "media": []
+    },
+    {
+      "id": 8,
+      "name": "Teatro Municipal José de la Cruz Mena",
+      "slug": "teatro",
+      "municipality": "León",
+      "category": "Artes",
+      "period": "",
+      "review_status": "pending",
+      "latitude": null,
+      "longitude": null,
+      "description": "Mapa Nacional de Turismo describe el Teatro Municipal José de la Cruz Mena como un edificio de dos plantas cuya fachada combina elementos barrocos coloniales y neoclásicos.",
+      "context": "La investigación ampliará su trayectoria, programación y vínculo con las artes mediante fuentes municipales y documentos del teatro.",
+      "significance": "La fuente vincula el nombre del teatro con el legado musical de José de la Cruz Mena, como parte de las expresiones artísticas leonesas.",
+      "sources": [
+        {
+          "id": 3,
+          "title": "Municipio de Léon",
+          "institution": "Mapa Nacional de Turismo · INTUR",
+          "url": "https://www.mapanicaragua.com/municipio-de-leon/",
+          "publication_date": "2020-04-27 (metadatos del portal)",
+          "accessed_on": "2026-10-02",
+          "verified": true,
+          "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+        }
+      ],
+      "claims": [
+        {
+          "text": "La ficha institucional describe un edificio esquinero de planta rectangular y dos plantas, con una fachada de elementos barrocos coloniales y neoclásicos.",
+          "source": {
+            "id": 3,
+            "title": "Municipio de Léon",
+            "institution": "Mapa Nacional de Turismo · INTUR",
+            "url": "https://www.mapanicaragua.com/municipio-de-leon/",
+            "publication_date": "2020-04-27 (metadatos del portal)",
+            "accessed_on": "2026-10-02",
+            "verified": true,
+            "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+          },
+          "locator": "Arquitectura → Teatro Municipal de León, José de la Cruz Mena",
+          "kind": "fact",
+          "id": 13
+        },
+        {
+          "text": "La sección cultural de la ficha municipal relaciona el nombre del teatro con el legado musical de José de la Cruz Mena.",
+          "source": {
+            "id": 3,
+            "title": "Municipio de Léon",
+            "institution": "Mapa Nacional de Turismo · INTUR",
+            "url": "https://www.mapanicaragua.com/municipio-de-leon/",
+            "publication_date": "2020-04-27 (metadatos del portal)",
+            "accessed_on": "2026-10-02",
+            "verified": true,
+            "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+          },
+          "locator": "Cultura → párrafo sobre literatura y arte",
+          "kind": "fact",
+          "id": 14
+        }
+      ],
+      "coordinate_source": null,
+      "media": []
+    }
+  ],
+  "events": [
+    {
+      "year": 1524,
+      "title": "Fundación del asentamiento original de León",
+      "description": "Mapa Nacional de Turismo identifica este año como la fundación de la ciudad original en el lugar hoy conocido como León Viejo.",
+      "source": {
+        "id": 4,
+        "title": "Arquitectura de La Paz Centro",
+        "institution": "Mapa Nacional de Turismo · INTUR",
+        "url": "https://www.mapanicaragua.com/arquitectura-de-la-paz-centro/",
+        "publication_date": "2020-07-21 (metadatos del portal)",
+        "accessed_on": "2026-10-02",
+        "verified": true,
+        "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+      },
+      "id": 1,
+      "place_slug": "leon-viejo",
+      "verified": true
+    },
+    {
+      "year": 1967,
+      "title": "Redescubrimiento de las ruinas de León Viejo",
+      "description": "Año de redescubrimiento indicado en la ficha institucional Arquitectura de La Paz Centro.",
+      "source": {
+        "id": 4,
+        "title": "Arquitectura de La Paz Centro",
+        "institution": "Mapa Nacional de Turismo · INTUR",
+        "url": "https://www.mapanicaragua.com/arquitectura-de-la-paz-centro/",
+        "publication_date": "2020-07-21 (metadatos del portal)",
+        "accessed_on": "2026-10-02",
+        "verified": true,
+        "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+      },
+      "id": 2,
+      "place_slug": "leon-viejo",
+      "verified": true
+    },
+    {
+      "year": 2000,
+      "title": "Reconocimiento patrimonial de León Viejo",
+      "description": "Año del reconocimiento por UNESCO según Mapa Nacional de Turismo. Pendiente de contrastar con el registro primario UNESCO.",
+      "source": {
+        "id": 5,
+        "title": "Ciudades Patrimoniales",
+        "institution": "Mapa Nacional de Turismo · INTUR",
+        "url": "https://www.mapanicaragua.com/portfolio-items/ciudades-patrimoniales/",
+        "publication_date": "2022-02-18 (metadatos del portal)",
+        "accessed_on": "2026-10-02",
+        "verified": true,
+        "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+      },
+      "id": 3,
+      "place_slug": "leon-viejo",
+      "verified": true
+    },
+    {
+      "year": 2011,
+      "title": "Reconocimiento patrimonial de la Catedral",
+      "description": "Año del reconocimiento por UNESCO según Mapa Nacional de Turismo. Pendiente de contrastar con el registro primario UNESCO.",
+      "source": {
+        "id": 5,
+        "title": "Ciudades Patrimoniales",
+        "institution": "Mapa Nacional de Turismo · INTUR",
+        "url": "https://www.mapanicaragua.com/portfolio-items/ciudades-patrimoniales/",
+        "publication_date": "2022-02-18 (metadatos del portal)",
+        "accessed_on": "2026-10-02",
+        "verified": true,
+        "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+      },
+      "id": 4,
+      "place_slug": "catedral",
+      "verified": true
+    }
+  ],
+  "routes": [
+    {
+      "id": 1,
+      "slug": "origenes",
+      "title": "Orígenes de León",
+      "description": "Recorrido digital de investigación. Las paradas contienen contenido pendiente de revisión; no es una ruta física ni calcula tiempos de traslado.",
+      "stops": [
+        {
+          "order": 1,
+          "place_slug": "leon-viejo",
+          "prompt": "Identifica el municipio y revisa el estado de las fuentes. ¿Qué falta comprobar para explicar su importancia cultural?"
+        },
+        {
+          "order": 2,
+          "place_slug": "catedral",
+          "prompt": "Identifica el municipio y revisa el estado de las fuentes. ¿Qué falta comprobar para explicar su importancia cultural?"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "slug": "patrimonio",
+      "title": "Patrimonio y arquitectura",
+      "description": "Recorrido digital de investigación. Las paradas contienen contenido pendiente de revisión; no es una ruta física ni calcula tiempos de traslado.",
+      "stops": [
+        {
+          "order": 1,
+          "place_slug": "catedral",
+          "prompt": "Identifica el municipio y revisa el estado de las fuentes. ¿Qué falta comprobar para explicar su importancia cultural?"
+        },
+        {
+          "order": 2,
+          "place_slug": "san-juan",
+          "prompt": "Identifica el municipio y revisa el estado de las fuentes. ¿Qué falta comprobar para explicar su importancia cultural?"
+        },
+        {
+          "order": 3,
+          "place_slug": "recoleccion",
+          "prompt": "Identifica el municipio y revisa el estado de las fuentes. ¿Qué falta comprobar para explicar su importancia cultural?"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "slug": "dario",
+      "title": "Rubén Darío",
+      "description": "Recorrido digital de investigación. Las paradas contienen contenido pendiente de revisión; no es una ruta física ni calcula tiempos de traslado.",
+      "stops": [
+        {
+          "order": 1,
+          "place_slug": "ruben-dario",
+          "prompt": "Identifica el municipio y revisa el estado de las fuentes. ¿Qué falta comprobar para explicar su importancia cultural?"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "slug": "memoria",
+      "title": "Memoria y tradiciones",
+      "description": "Recorrido digital de investigación. Las paradas contienen contenido pendiente de revisión; no es una ruta física ni calcula tiempos de traslado.",
+      "stops": [
+        {
+          "order": 1,
+          "place_slug": "sutiaba",
+          "prompt": "Identifica el municipio y revisa el estado de las fuentes. ¿Qué falta comprobar para explicar su importancia cultural?"
+        },
+        {
+          "order": 2,
+          "place_slug": "leyendas",
+          "prompt": "Identifica el municipio y revisa el estado de las fuentes. ¿Qué falta comprobar para explicar su importancia cultural?"
+        },
+        {
+          "order": 3,
+          "place_slug": "teatro",
+          "prompt": "Identifica el municipio y revisa el estado de las fuentes. ¿Qué falta comprobar para explicar su importancia cultural?"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "prompt": "¿Cómo debes interpretar una ficha marcada como pendiente?",
+      "options": [
+        "Como investigación por verificar",
+        "Como un hecho histórico demostrado"
+      ],
+      "correct_index": 0,
+      "explanation": "La etiqueta pendiente señala que faltan fuentes consultadas y revisión histórica.",
+      "source": null,
+      "id": 1,
+      "place__slug": "leon-viejo",
+      "active": true
+    },
+    {
+      "prompt": "Si los mosaicos del mapa no cargan, ¿cómo puedes consultar los lugares?",
+      "options": [
+        "Mediante la lista de lugares",
+        "No se pueden consultar"
+      ],
+      "correct_index": 0,
+      "explanation": "La lista permite abrir cada ficha aun cuando falle el proveedor externo del mapa.",
+      "source": null,
+      "id": 2,
+      "place__slug": "leon-viejo",
+      "active": true
+    },
+    {
+      "prompt": "¿Qué año identifica la ficha institucional como fundación del asentamiento original de León?",
+      "options": [
+        "1524",
+        "1967",
+        "2011"
+      ],
+      "correct_index": 0,
+      "explanation": "La sección Ruinas de León Viejo de Arquitectura de La Paz Centro indica que allí se fundó originalmente la ciudad en 1524. 1967 corresponde al redescubrimiento de las ruinas.",
+      "source": {
+        "id": 4,
+        "title": "Arquitectura de La Paz Centro",
+        "institution": "Mapa Nacional de Turismo · INTUR",
+        "url": "https://www.mapanicaragua.com/arquitectura-de-la-paz-centro/",
+        "publication_date": "2020-07-21 (metadatos del portal)",
+        "accessed_on": "2026-10-02",
+        "verified": true,
+        "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+      },
+      "id": 3,
+      "place__slug": "leon-viejo",
+      "active": true
+    },
+    {
+      "prompt": "¿Qué poeta señala Mapa Nacional de Turismo como sepultado en la Catedral de León?",
+      "options": [
+        "Rubén Darío",
+        "José de la Cruz Mena"
+      ],
+      "correct_index": 0,
+      "explanation": "La sección de Catedral de León señala la sepultura de Rubén Darío. El nombre José de la Cruz Mena se vincula en el catálogo con el teatro y el legado musical.",
+      "source": {
+        "id": 3,
+        "title": "Municipio de Léon",
+        "institution": "Mapa Nacional de Turismo · INTUR",
+        "url": "https://www.mapanicaragua.com/municipio-de-leon/",
+        "publication_date": "2020-04-27 (metadatos del portal)",
+        "accessed_on": "2026-10-02",
+        "verified": true,
+        "notes": "Contenido consultado mediante la API pública del portal institucional. Fecha de publicación según metadatos; no equivale a la fecha de los hechos. Revisión documental inicial, pendiente de contraste con fuentes primarias."
+      },
+      "id": 4,
+      "place__slug": "catedral",
+      "active": true
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "name": "leon-en-el-tiempo",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc -b && vite build",
+    "test:e2e": "playwright test",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.0.0",
+    "leaflet": "^1.9.4",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0",
+    "vite": "^6.3.0",
+    "@vitejs/plugin-react": "^4.4.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/leaflet": "^1.9.0",
+    "@types/qrcode": "^1.5.5",
+    "@types/node": "^22.0.0",
+    "@playwright/test": "^1.51.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}
