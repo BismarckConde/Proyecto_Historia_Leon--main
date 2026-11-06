@@ -12,7 +12,7 @@ import {
 import type { Place, HistoricalEvent, Route } from "./types";
 import { recall, remember, useJourneyText, routeProgress } from "./journey";
 import { JourneyScroll } from "./JourneyScroll";
-import { PlaceMap } from "./PlaceMap";
+import { HistoricalEventMap, PlaceMap } from "./PlaceMap";
 import { Quiz } from "./Quiz";
 import { OfflineStatus } from "./OfflineStatus";
 import territoryImage from "./assets/leon-territory.svg";
@@ -79,6 +79,22 @@ function PlaceCard({ place, selected, onSelect }: { place: Place; selected?: boo
       <div className="place-actions"><Link className="text-link" state={{ from: location.pathname }} onClick={() => remember("selected-place", place.slug)} to={"/lugares/" + place.slug}>Ver lugar →</Link>{onSelect && <button className="secondary" onClick={onSelect}>Ver en mapa</button>}</div>
     </article>
   );
+}
+function HistoricalEventCard({ event, selected, onSelect }: { event: HistoricalEvent; selected?: boolean; onSelect?: () => void }) {
+  const hasMappedLocation = event.latitude !== null && event.latitude !== undefined && event.longitude !== null && event.longitude !== undefined && event.coordinate_source?.verified;
+  return <article className={"card event-card" + (selected ? " is-selected" : "")} data-event-id={event.id}>
+    {event.image_url && <img className="event-card-image" src={event.image_url} alt={event.image_alt || event.title} loading="lazy" />}
+    <p className="place-category">{event.category}</p>
+    <p className="event-card-year">{event.year}</p>
+    <h3>{event.title}</h3>
+    <span className={"badge " + (event.verified && event.source.verified ? "reviewed" : "")}>{event.verified && event.source.verified ? "Fuente consultada" : "Pendiente de verificación"}</span>
+    <p className="place-summary">{event.description}</p>
+    <p className="event-location"><strong>Lugar:</strong> {event.location}</p>
+    <p className="small">{hasMappedLocation ? "Ubicación cartográfica verificada" : "Ubicación pendiente de verificación"}</p>
+    <p className="small"><a href={event.source.url} target="_blank" rel="noreferrer">Fuente: {event.source.institution} · {event.source.title}</a></p>
+    {event.coordinate_source && <p className="small"><a href={event.coordinate_source.url} target="_blank" rel="noreferrer">Fuente cartográfica: {event.coordinate_source.institution}</a></p>}
+    {onSelect && <div className="place-actions"><button className="secondary" disabled={!hasMappedLocation} onClick={onSelect}>{hasMappedLocation ? "Ver ubicación en mapa" : "Ubicación pendiente"}</button></div>}
+  </article>;
 }
 function CathedralArtwork() {
   return <figure className="cathedral-artwork"><img src={cathedralImage} alt="Ilustración tridimensional de la Catedral de León, Nicaragua" /></figure>;
@@ -152,14 +168,24 @@ function Home() {
 }
 function Explore() {
   const state = useData<Place[]>("places/");
-  const [q, setQ] = useJourneyText("explore-q");
+  const eventState = useData<HistoricalEvent[]>("events/");
+  const [placeQuery, setPlaceQuery] = useJourneyText("explore-q");
+  const [eventQuery, setEventQuery] = useJourneyText("explore-event-q");
   const [municipality, setMunicipality] = useJourneyText("explore-municipality");
   const [category, setCategory] = useJourneyText("explore-category");
   const [period, setPeriod] = useJourneyText("explore-period");
   const [view, setView] = useJourneyText("catalog-view", "cards");
   const [selectedPlace, setSelectedPlace] = useJourneyText("selected-place");
+  const [mode, setMode] = useState<"places" | "events">("places");
+  const [eventCategory, setEventCategory] = useJourneyText("explore-event-category");
+  const [selectedEventText, setSelectedEventText] = useJourneyText("selected-event");
   if (!state.data) return <State {...state} />;
+  if (!eventState.data) return <State {...eventState} />;
   const all = state.data;
+  const allEvents = eventState.data;
+  const q = mode === "events" ? eventQuery : placeQuery;
+  const setQ = mode === "events" ? setEventQuery : setPlaceQuery;
+  const selectedEventId = /^\d+$/.test(selectedEventText) ? Number(selectedEventText) : null;
   const normalized = (s: string) =>
     s
       .normalize("NFD")
@@ -172,22 +198,30 @@ function Explore() {
       (!category || p.category === category) &&
       (!period || p.period === period),
   );
+  const filteredEvents = allEvents.filter(event =>
+    normalized(`${event.title} ${event.description} ${event.location} ${event.category}`).includes(normalized(q)) &&
+    (!eventCategory || eventCategory === "Sucesos históricos" || event.category === eventCategory),
+  );
   return (
     <>
       <div className="page-title explore-title">
         <h1>Explorar León</h1>
 
       </div>
+      <div className="explore-kind" role="group" aria-label="Tipo de contenido">
+        <button aria-pressed={mode === "places"} onClick={() => setMode("places")}>Lugares</button>
+        <button aria-pressed={mode === "events"} onClick={() => { setMode("events"); setSelectedEventText(""); }}>Acontecimientos</button>
+      </div>
       <div className="explore-search">
         <label>
-          Buscar un lugar
+          {mode === "events" ? "Buscar un acontecimiento" : "Buscar un lugar"}
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Nombre o descripción"
+            placeholder={mode === "events" ? "Título, lugar o descripción" : "Nombre o descripción"}
           />
         </label>
-        <details className="advanced-filters"><summary>Filtros{municipality || period ? " · activos" : ""}</summary><div className="filters">
+        {mode === "places" && <details className="advanced-filters"><summary>Filtros{municipality || period ? " · activos" : ""}</summary><div className="filters">
         <label>
           Municipio
           <select
@@ -220,10 +254,15 @@ function Explore() {
           </label>
         )}
         <button className="secondary" onClick={() => { setMunicipality(""); setPeriod(""); }}>Limpiar filtros</button>
-      </div></details></div>
-<div className="filter-chips" role="group" aria-label="Filtrar por tema">
-        {["", ...new Set(all.map(p => p.category))].map(value => <button key={value} aria-pressed={category === value} onClick={() => setCategory(value)}>{value || "Todos los temas"}</button>)}
+      </div></details>}
       </div>
+      {mode === "places" ? <div className="filter-chips" role="group" aria-label="Filtrar por tema">
+        {["", ...new Set(all.map(p => p.category))].map(value => <button key={value} aria-pressed={category === value} onClick={() => setCategory(value)}>{value || "Todos los temas"}</button>)}
+      </div> : <div className="filter-chips" role="group" aria-label="Filtrar acontecimientos por categoría">
+        <button aria-pressed={!eventCategory || eventCategory === "Sucesos históricos"} onClick={() => setEventCategory("Sucesos históricos")}>Sucesos históricos</button>
+        {[...new Set(allEvents.map(event => event.category).filter((value): value is string => !!value && value !== "Sucesos históricos"))].map(value => <button key={value} aria-pressed={eventCategory === value} onClick={() => setEventCategory(value)}>{value}</button>)}
+      </div>}
+      {mode === "places" && <>
       <PlaceMap places={filtered} selectedSlug={selectedPlace} onSelect={setSelectedPlace} />
       <h2 id="lista-lugares" tabIndex={-1}>
         Lista de lugares <span className="small">({filtered.length})</span>
@@ -239,6 +278,16 @@ function Explore() {
           <PlaceCard key={p.id} place={p} selected={selectedPlace === p.slug} onSelect={p.coordinate_source?.verified && p.latitude !== null && p.longitude !== null ? () => { setSelectedPlace(p.slug); document.querySelector(".map-panel")?.scrollIntoView({ block: "start", behavior: "instant" }); } : undefined} />
         ))}
       </div>
+      </>}
+      {mode === "events" && <>
+        <HistoricalEventMap events={filteredEvents} selectedId={selectedEventId} onSelect={id => setSelectedEventText(id === null ? "" : String(id))} />
+        <h2 id="lista-acontecimientos" tabIndex={-1}>Acontecimientos históricos <span className="small">({filteredEvents.length})</span></h2>
+        <div className="catalog-view" role="group" aria-label="Presentación del catálogo"><button aria-pressed={view !== "compact"} onClick={() => setView("cards")}>Tarjetas</button><button aria-pressed={view === "compact"} onClick={() => setView("compact")}>Lista compacta</button></div>
+        {!filteredEvents.length && <p role="status">No hay acontecimientos que coincidan. Cambia la búsqueda o la categoría.</p>}
+        <div className={"grid event-catalog " + (view === "compact" ? "compact-catalog" : "")}>
+          {filteredEvents.map(event => <HistoricalEventCard key={event.id} event={event} selected={selectedEventId === event.id} onSelect={event.coordinate_source?.verified && event.latitude !== null && event.latitude !== undefined && event.longitude !== null && event.longitude !== undefined ? () => { setSelectedEventText(String(event.id)); document.querySelector(".map-panel")?.scrollIntoView({ block: "start", behavior: "instant" }); } : undefined} />)}
+        </div>
+      </>}
     </>
   );
 }
@@ -390,15 +439,15 @@ function Timeline() {
   const state = useData<HistoricalEvent[]>("events/");
   const [selected, setSelected] = useJourneyText("timeline-filter");
   if (!state.data) return <State {...state} />;
-  const verified = state.data.filter((e) => e.verified && e.source.verified);
+  const verified = state.data.filter((e) => e.verified && e.source.verified && e.featured);
   const events = verified.filter((e) => !selected || e.place_slug === selected);
   return (
     <>
       <div className="page-title">
         <h1>León a través del tiempo</h1>
         <p>
-          Relaciona las fechas con los lugares y consulta la fuente de cada
-          acontecimiento.
+          Hitos seleccionados de la historia de León. Explorar reúne los demás
+          acontecimientos; aquí cada fecha cuenta con una fuente consultada.
         </p>
       </div>
       <label>
@@ -406,8 +455,8 @@ function Timeline() {
         <select value={selected} onChange={(e) => setSelected(e.target.value)}>
           <option value="">Todos los lugares</option>
           {[
-            ...new Map(
-              verified.map((e) => [e.place_slug, e.place_name]),
+              ...new Map(
+                verified.filter(e => e.place_slug).map((e) => [e.place_slug!, e.place_name]),
             ).entries(),
           ].map(([s, n]) => (
             <option key={s} value={s}>
@@ -418,22 +467,19 @@ function Timeline() {
       </label>
       {!events.length ? (
         <div className="notice">
-          Aún no hay acontecimientos con fechas verificadas. La línea del tiempo
-          se poblará al completar la revisión documental; no se muestran fechas
-          supuestas.
+              Aún no hay hitos destacados con fuentes verificadas. Puedes consultar
+              todos los acontecimientos desde Explorar.
         </div>
       ) : (
         <><nav className="timeline-anchors" aria-label="Saltar a un acontecimiento">{events.map(e => <a key={e.id} href={"#evento-" + e.id}>{e.year}</a>)}</nav><ol className="timeline">
           {events.map((e, index) => (
             <li key={e.id} id={"evento-" + e.id}>
               <span className="year">{e.year}</span>
-              <img className="timeline-image" src={e.place_slug === "catedral" ? cathedralImage : territoryImage} alt={e.place_slug === "catedral" ? "Ilustración de la Catedral de León" : "Mapa del departamento con la ubicación de León Viejo"} loading="lazy" />
+              {e.image_url ? <img className="timeline-image event-timeline-photo" src={e.image_url} alt={e.image_alt || e.title} loading="lazy" /> : e.place_slug === "catedral" || e.place_slug === "leon-viejo" ? <img className="timeline-image" src={e.place_slug === "catedral" ? cathedralImage : territoryImage} alt={e.place_slug === "catedral" ? "Ilustración de la Catedral de León" : "Mapa del departamento con la ubicación de León Viejo"} loading="lazy" /> : <div className="timeline-image timeline-place-label">{e.location}</div>}
               <div>
                 <h2>{e.title}</h2>
                 <EventSummary text={e.description} />
-                <Link to={"/lugares/" + e.place_slug}>
-                  Abrir ficha de {e.place_name} →
-                </Link>
+                {e.place_slug ? <Link to={"/lugares/" + e.place_slug}>Abrir ficha de {e.place_name} →</Link> : <p><strong>Lugar:</strong> {e.location}</p>}
                 <p>
                   <a href={e.source.url}>Fuente: {e.source.institution}</a>
                 </p>

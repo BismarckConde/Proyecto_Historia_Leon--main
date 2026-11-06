@@ -24,9 +24,9 @@ El build genera dist/. Un alojamiento estático debe devolver index.html en las 
 
 - Ocho lugares con búsqueda, filtros, fichas, afirmaciones y fuentes.
 - Mapa Leaflet con límite departamental local y dos ubicaciones verificadas.
-- Cuatro acontecimientos y cuatro rutas educativas.
+- Siete acontecimientos, con categoría y ubicación para consultarlos en Explorar y en el mapa; la línea del tiempo incluye solo los hitos marcados como relevantes.
 - Mini-quiz de cuatro preguntas, progreso, respuestas con feedback inmediato y explicación.
-- Panel de administración en /admin con acceso Google vía Supabase, gestión de lugares/fotos mediante URL y editor avanzado del catálogo.
+- Panel de administración en /admin con acceso Google vía Supabase, gestión de lugares/fotos y sucesos históricos con fuentes, ubicación y selección de hitos para la línea del tiempo.
 - Temas claro/oscuro de alto contraste, navegación inferior móvil, fichas inferiores en el mapa y filtros por tema. Títulos clásicos y texto de interfaz legible; animaciones con movimiento reducido.
 - Línea del tiempo con anclas por año, ilustración de la Catedral y mapa local de León Viejo. El contexto completo sigue disponible.
 - PWA instalable con catálogo, imágenes y mapa básico local disponibles después de la primera carga completa de producción.

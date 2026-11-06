@@ -27,6 +27,7 @@ const number: Rule = (v, p) => { if (typeof v !== "number" || !Number.isFinite(v
 const integer: Rule = (v, p) => { number(v, p); if (!Number.isInteger(v)) fail(p); };
 const id: Rule = (v, p) => { integer(v, p); if ((v as number) < 1) fail(p); };
 const nullable = (rule: Rule): Rule => (v, p) => { if (v !== null) rule(v, p); };
+const optional = (rule: Rule): Rule => (v, p) => { if (v !== undefined) rule(v, p); };
 const array = (rule: Rule): Rule => (v, p) => {
   if (!Array.isArray(v)) fail(p);
   (v as unknown[]).forEach((item, i) => rule(item, `${p}[${i}]`));
@@ -45,7 +46,7 @@ const url: Rule = (v, p) => {
 const source = object({ id, title: string, institution: string, url, verified: boolean,
   accessed_on: nullable(string), publication_date: string, notes: string });
 const schema = object({
-  version: choice(1),
+  version: choice(1, 2),
   places: array(object({ id, name: string, slug, municipality: string, category: string,
     period: string, description: string, context: string, significance: string,
     review_status: choice("pending", "reviewed"), latitude: nullable(number), longitude: nullable(number),
@@ -55,7 +56,10 @@ const schema = object({
       creator: string, license: string, permission_url: url, alt_text: string })),
   })),
   events: array(object({ id, title: string, year: integer, description: string,
-    verified: boolean, source, place_slug: slug })),
+    verified: boolean, source, place_slug: nullable(slug), category: optional(string),
+    location: optional(string), featured: optional(boolean), latitude: optional(nullable(number)),
+    longitude: optional(nullable(number)), coordinate_source: optional(nullable(source)),
+    image_url: optional(nullable(url)), image_alt: optional(string) })),
   routes: array(object({ id, slug, title: string, description: string,
     stops: array(object({ order: id, prompt: string, place_slug: slug })) })),
   questions: array(object({ id, prompt: string, options: array(string), place__slug: slug,
@@ -79,8 +83,12 @@ export function validateCatalog(value: unknown): Catalog {
     if (p.review_status === "reviewed" && !p.claims.some(c => c.source.verified)) fail(`${p.slug}: revisión sin afirmación respaldada`);
   }
   for (const e of catalog.events) {
-    placeExists(e.place_slug);
+    if (e.place_slug) placeExists(e.place_slug);
     if (e.year < 0 || e.year > 2100 || (e.verified && !e.source.verified)) fail(`acontecimiento ${e.id}`);
+    if ((e.latitude === undefined) !== (e.longitude === undefined) ||
+      (e.latitude === null) !== (e.longitude === null)) fail(`acontecimiento ${e.id}: se necesitan ambas coordenadas`);
+    if (e.latitude != null && (Math.abs(e.latitude) > 90 || Math.abs(e.longitude!) > 180 || !e.coordinate_source)) fail(`acontecimiento ${e.id}: coordenadas o fuente`);
+    if (e.featured && (!e.verified || !e.source.verified)) fail(`acontecimiento ${e.id}: hito sin fuente verificada`);
   }
   for (const r of catalog.routes) {
     unique(r.stops.map(s => s.order), `${r.slug}: orden duplicado`);
@@ -93,15 +101,47 @@ export function validateCatalog(value: unknown): Catalog {
   return catalog;
 }
 
-// Complete the six legacy entries without replacing locally edited content or coordinates.
+// Complete legacy places and events without replacing locally edited content or coordinates.
 export function completeLegacyCoordinates(catalog: Catalog): Catalog {
-  return { ...catalog, places: catalog.places.map(place => {
+  const places = catalog.places.map(place => {
     if (place.latitude !== null || place.longitude !== null || place.coordinate_source !== null) return place;
     const original = initialCatalog.places.find(p => p.slug === place.slug && p.id === place.id && p.municipality === place.municipality);
     if (!original?.coordinate_source?.verified) return place;
     return { ...place, latitude: original.latitude, longitude: original.longitude,
       coordinate_source: structuredClone(original.coordinate_source) };
-  }) };
+  });
+  let events = catalog.events.map(event => {
+    const original = initialCatalog.events.find(e => e.id === event.id && e.title === event.title && e.year === event.year) as Partial<HistoricalEvent> | undefined;
+    if (!original) return event;
+    return { ...event,
+      category: event.category !== undefined ? event.category : original.category,
+      location: event.location !== undefined ? event.location : original.location,
+      featured: event.featured !== undefined ? event.featured : original.featured,
+      latitude: event.latitude !== undefined ? event.latitude : original.latitude,
+      longitude: event.longitude !== undefined ? event.longitude : original.longitude,
+      coordinate_source: event.coordinate_source !== undefined ? event.coordinate_source : original.coordinate_source,
+    };
+  });
+  // Version 1 remote catalogs predate the three newly bundled historical events.
+  // Add them once during migration, then persist version 2 so later deletions stay deleted.
+  if (catalog.version < 2) {
+    const bundledEvents = initialCatalog.events as unknown as Catalog["events"];
+    const present = new Set(events.map(event => `${event.year}:${event.title}`));
+    const usedIds = new Set(events.map(event => event.id));
+    let nextId = Math.max(0, ...usedIds) + 1;
+    for (const original of bundledEvents.filter(event => event.id >= 5)) {
+      if (present.has(`${original.year}:${original.title}`)) continue;
+      let eventId = original.id;
+      if (usedIds.has(eventId)) {
+        while (usedIds.has(nextId)) nextId += 1;
+        eventId = nextId++;
+      }
+      usedIds.add(eventId);
+      present.add(`${original.year}:${original.title}`);
+      events = [...events, { ...structuredClone(original), id: eventId }];
+    }
+  }
+  return { ...catalog, version: 2, places, events };
 }
 
 export function loadCatalog(): Catalog {
@@ -118,12 +158,21 @@ export function saveCatalog(value: unknown) {
   catch { throw new Error("No se pudo guardar. Comprueba el espacio y los permisos de almacenamiento del navegador; exporta el JSON para conservar tus cambios."); }
 }
 
-export function originalCatalog(): Catalog { return structuredClone(validateCatalog(initialCatalog)); }
+export function originalCatalog(): Catalog { return completeLegacyCoordinates(structuredClone(validateCatalog(initialCatalog))); }
 
 function resolvedContent(catalog: Catalog) {
-  const events: HistoricalEvent[] = catalog.events.map(e => ({ ...e,
-    place_name: catalog.places.find(p => p.slug === e.place_slug)!.name,
-  })).sort((a, b) => a.year - b.year || a.id - b.id);
+  const events: HistoricalEvent[] = catalog.events.map(e => {
+    const place = catalog.places.find(p => p.slug === e.place_slug);
+    return { ...e,
+      category: e.category ?? "Historia",
+      location: e.location ?? place?.name ?? "León",
+      featured: e.featured ?? false,
+      latitude: e.latitude ?? place?.latitude ?? null,
+      longitude: e.longitude ?? place?.longitude ?? null,
+      coordinate_source: e.coordinate_source ?? place?.coordinate_source ?? null,
+      place_name: place?.name ?? e.location ?? "León",
+    };
+  }).sort((a, b) => a.year - b.year || a.id - b.id);
   const places: Place[] = catalog.places.map(p => ({ ...p,
     events: events.filter(e => e.place_slug === p.slug),
   })).sort((a, b) => a.name.localeCompare(b.name, "es"));

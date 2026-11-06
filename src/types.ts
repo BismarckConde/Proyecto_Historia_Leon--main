@@ -15,7 +15,15 @@ export type HistoricalEvent = {
   description: string;
   verified: boolean;
   source: Source;
-  place_slug: string;
+  category?: string;
+  location?: string;
+  featured?: boolean;
+  latitude?: number | null;
+  longitude?: number | null;
+  coordinate_source?: Source | null;
+  image_url?: string | null;
+  image_alt?: string;
+  place_slug: string | null;
   place_name: string;
 };
 export type Place = {

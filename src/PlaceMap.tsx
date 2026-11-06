@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import L from "leaflet";
 import type { GeoJsonObject } from "geojson";
 import department from "./data/leon-department.json";
-import type { Place } from "./types";
+import type { HistoricalEvent, Place } from "./types";
 import { recall, remember, useJourneyText } from "./journey";
 
 export function PlaceMap({ places, selectedSlug, onSelect }: { places: Place[]; selectedSlug: string; onSelect: (slug: string) => void }) {
@@ -122,5 +122,116 @@ export function PlaceMap({ places, selectedSlug, onSelect }: { places: Place[]; 
     {failed && <p className="map-message" role="status">Mapa básico local: límite departamental y lugares verificados. Las calles necesitan conexión.</p>}
     {!mapped.length && <p role="status">No hay ubicaciones verificadas para este filtro. Consulta las fichas desde la lista.</p>}
     <p className="small map-credit">Límite orientativo y ubicaciones: OpenStreetMap contributors, ODbL 1.0. No es cartografía catastral.</p>
+  </section>;
+}
+
+export function HistoricalEventMap({ events, selectedId, onSelect }: {
+  events: HistoricalEvent[];
+  selectedId: number | null;
+  onSelect: (id: number | null) => void;
+}) {
+  const container = useRef<HTMLDivElement>(null);
+  const title = useRef<HTMLHeadingElement>(null);
+  const mapRef = useRef<L.Map | undefined>(undefined);
+  const markerRef = useRef<HTMLElement | null>(null);
+  const [failed, setFailed] = useState(!navigator.onLine);
+  const eventsKey = JSON.stringify(events);
+  const mapped = events.filter(e => e.latitude !== null && e.latitude !== undefined && e.longitude !== null && e.longitude !== undefined && e.coordinate_source?.verified);
+  const recenter = () => {
+    const map = mapRef.current;
+    if (!map) return;
+    if (mapped.length === 1) map.setView([mapped[0].latitude!, mapped[0].longitude!], 14, { animate: false });
+    else if (mapped.length > 1) map.fitBounds(L.latLngBounds(mapped.map(event => L.latLng(event.latitude!, event.longitude!))).pad(.18), { maxZoom: 14, animate: false });
+    else map.fitBounds(L.geoJSON(department as GeoJsonObject).getBounds().pad(.05), { animate: false });
+  };
+  const selected = mapped.find(e => e.id === selectedId);
+  const sameSite = (a: HistoricalEvent, b: HistoricalEvent) => L.latLng(a.latitude!, a.longitude!).distanceTo([b.latitude!, b.longitude!]) < 200;
+  const locationGroups = mapped.reduce<HistoricalEvent[][]>((groups, event) => {
+    const group = groups.find(items => sameSite(items[0], event));
+    if (group) group.push(event); else groups.push([event]);
+    return groups;
+  }, []);
+  const selectedGroup = locationGroups.find(group => group.some(event => event.id === selectedId)) || [];
+
+  useEffect(() => {
+    if (!container.current) return;
+    const map = L.map(container.current, { zoomControl: false });
+    mapRef.current = map;
+    L.control.zoom({ position: "bottomright" }).addTo(map);
+    const boundary = L.geoJSON(department as GeoJsonObject, { style: {
+      color: "#456952", weight: 2, fillColor: "#a9bc8d", fillOpacity: .3,
+    } }).addTo(map);
+    if (mapped.length === 1) map.setView([mapped[0].latitude!, mapped[0].longitude!], 14, { animate: false });
+    else if (mapped.length > 1) map.fitBounds(L.latLngBounds(mapped.map(event => L.latLng(event.latitude!, event.longitude!))).pad(.18), { maxZoom: 14, animate: false });
+    else map.fitBounds(boundary.getBounds().pad(.05));
+    const tiles = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors', maxZoom: 19,
+    });
+    const reconnect = () => { setFailed(false); tiles.addTo(map); tiles.redraw(); };
+    const offline = () => { setFailed(true); tiles.remove(); };
+    tiles.on("tileerror", () => setFailed(true));
+    if (navigator.onLine) tiles.addTo(map);
+    window.addEventListener("online", reconnect);
+    window.addEventListener("offline", offline);
+    for (const group of locationGroups) {
+      const event = group[0];
+      const marker = L.marker([event.latitude!, event.longitude!], {
+        title: group.length > 1 ? `${group.length} acontecimientos en ${event.location}` : `${event.year} · ${event.title}`,
+        alt: group.length > 1 ? `${group.length} acontecimientos en ${event.location}` : `${event.year} · ${event.title}`,
+        icon: L.divIcon({ className: "event-marker", html: `<span aria-hidden="true">${group.length > 1 ? `<b>${group.length}</b>` : ""}</span>`, iconSize: [44, 44], iconAnchor: [22, 22] }),
+      }).addTo(map);
+      marker.getElement()?.setAttribute("data-event-ids", group.map(item => item.id).join(","));
+      marker.on("click", () => { markerRef.current = marker.getElement() || null; onSelect(event.id); });
+      marker.getElement()?.addEventListener("keydown", keyEvent => {
+        if (keyEvent.key === "Enter" || keyEvent.key === " ") {
+          keyEvent.preventDefault();
+          keyEvent.stopPropagation();
+          markerRef.current = marker.getElement() || null;
+          onSelect(event.id);
+        }
+      });
+    }
+    return () => { window.removeEventListener("online", reconnect); window.removeEventListener("offline", offline); map.remove(); };
+  }, [eventsKey]);
+
+  useEffect(() => {
+    container.current?.querySelectorAll<HTMLElement>(".event-marker").forEach(element => {
+      const active = element.dataset.eventIds?.split(",").includes(String(selectedId)) || false;
+      element.classList.toggle("selected-marker", active);
+      element.setAttribute("aria-pressed", String(active));
+      if (active) markerRef.current = element;
+    });
+    if (selected) {
+      title.current?.focus({ preventScroll: true });
+      const map = mapRef.current;
+      if (map) map.setView([selected.latitude!, selected.longitude!], Math.max(18, map.getZoom()), { animate: false });
+    }
+  }, [selectedId, eventsKey]);
+
+  const close = () => { onSelect(null); markerRef.current?.focus(); };
+  return <section className="map-panel" aria-label="Mapa de acontecimientos históricos">
+    <div className="section-heading"><h2>Mapa de los acontecimientos</h2><span>{mapped.length} sucesos en {locationGroups.length} ubicaciones</span></div>
+    <div className="map-stage">
+      <div ref={container} className="map" aria-label="Mapa interactivo con los lugares documentados de los acontecimientos históricos" />
+      <div className="map-tools"><button className="map-reset" onClick={recenter}>Ver todos los sucesos</button></div>
+      {selected && <section className="map-sheet" aria-labelledby="map-event-title" onKeyDown={e => { if (e.key === "Escape") close(); }}>
+        <div className="sheet-handle" aria-hidden="true" />
+        <button className="sheet-close" onClick={close}>Cerrar ficha</button>
+        <p className="eyebrow">{selected.year} · {selected.category}</p>
+        <h3 id="map-event-title" ref={title} tabIndex={-1}>{selected.title}</h3>
+        <p className="small">{selected.location}</p>
+        {selected.image_url && <img className="event-map-image" src={selected.image_url} alt={selected.image_alt || selected.title} loading="lazy" />}
+        {selectedGroup.length > 1 && <div className="co-located-events" role="group" aria-label="Otros acontecimientos en este mismo lugar">
+          {selectedGroup.map(event => <button key={event.id} className="secondary" aria-pressed={event.id === selected.id} onClick={() => onSelect(event.id)}>{event.year} · {event.title}</button>)}
+        </div>}
+        <p>{selected.description}</p>
+        <p className="small">{selected.coordinate_source?.notes}</p>
+        {selected.coordinate_source && <p className="small"><a href={selected.coordinate_source.url} target="_blank" rel="noreferrer">Fuente cartográfica: {selected.coordinate_source.institution}</a></p>}
+        <a href={selected.source.url} target="_blank" rel="noreferrer">Fuente histórica: {selected.source.institution} · {selected.source.title}</a>
+      </section>}
+    </div>
+    {failed && <p className="map-message" role="status">Mapa básico local: límite departamental y marcadores verificados. Las calles necesitan conexión.</p>}
+    {!mapped.length && <p role="status">No hay ubicaciones con coordenadas verificadas para estos acontecimientos. Consulta sus fichas y fuentes.</p>}
+    <p className="small map-credit">Los marcadores indican ubicaciones orientativas respaldadas por una fuente cartográfica. Los sucesos que abarcan una ciudad pueden usar un punto de referencia urbano.</p>
   </section>;
 }
