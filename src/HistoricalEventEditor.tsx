@@ -61,13 +61,14 @@ export function HistoricalEventEditor({ events, places, onSave }: {
     try {
       const latitude = draft.latitude;
       const longitude = draft.longitude;
+      const location = (draft.location ?? "").trim();
       const hasCoordinates = (latitude !== null && latitude !== undefined) || (longitude !== null && longitude !== undefined);
       if (hasCoordinates && (latitude == null || longitude == null)) throw new Error("Completa la latitud y la longitud, o deja ambas vacías.");
       if (!draft.title.trim() || !draft.category?.trim() || !draft.description.trim()) throw new Error("Completa el título, la categoría y la descripción del acontecimiento.");
       if (hasCoordinates && !draft.coordinate_source?.title.trim()) throw new Error("Indica la fuente cartográfica de estas coordenadas.");
       if (hasCoordinates && !draft.coordinate_source?.institution.trim()) throw new Error("Indica la institución de la fuente cartográfica.");
       if (hasCoordinates && !draft.coordinate_source?.url.trim()) throw new Error("Agrega el enlace de la fuente cartográfica.");
-      if (!draft.location.trim()) throw new Error("Indica dónde ocurrió el acontecimiento.");
+      if (!location) throw new Error("Indica dónde ocurrió el acontecimiento.");
       if (!draft.source.title.trim() || !draft.source.institution.trim() || !draft.source.url.trim()) throw new Error("Completa el título, la institución y el enlace de la fuente histórica.");
       if (draft.featured && (!draft.verified || !draft.source.verified)) throw new Error("Para incluir un hito en la línea del tiempo, marca el acontecimiento y su fuente como verificados.");
       let imageUrl = draft.image_url ?? null;
@@ -83,7 +84,7 @@ export function HistoricalEventEditor({ events, places, onSave }: {
       }
       const nextEvent: EventDraft = {
         ...draft,
-        title: draft.title.trim(), category: (draft.category || "Historia").trim(), location: draft.location.trim(),
+        title: draft.title.trim(), category: (draft.category || "Historia").trim(), location,
         description: draft.description.trim(), place_slug: draft.place_slug || null,
         image_url: imageUrl, image_alt: imageUrl ? (draft.image_alt?.trim() || draft.title.trim()) : "",
         latitude: hasCoordinates ? latitude : null, longitude: hasCoordinates ? longitude : null,
