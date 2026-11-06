@@ -9,7 +9,7 @@ flowchart LR
  R --> L[(localStorage)]
  E[Editor local React] --> L
  E --> J[Importación y exportación JSON]
- R --> Q[Calificación y QR locales]
+ R --> Q[Calificación local]
  R -. mosaicos opcionales .-> O[OpenStreetMap]
  V[Vite] --> R
 ```
@@ -43,7 +43,6 @@ flowchart TD
  I --> R[Rutas por paradas]
  R --> F
  I --> Q[Actividad y resultado]
- I --> QR[Feria y QR]
  I --> A[Editor JSON local]
 ```
 

@@ -145,10 +145,7 @@ function Home() {
         </div>
       </section>
       <aside className="notice">
-        Prototipo universitario en investigación. León Viejo y Catedral tienen
-        una revisión documental inicial; las otras fichas están pendientes de
-        ampliación. Consulta el estado y las fuentes antes de compartir
-        información.
+        León: historia viva, cultura que nos une.
       </aside>
     </>
   );
@@ -535,74 +532,6 @@ function RouteDetail() {
     </>
   );
 }
-function Fair() {
-  const [url, setUrl] = useState("");
-  const [qr, setQr] = useState("");
-  const [error, setError] = useState("");
-  const generate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setQr("");
-    try {
-      const u = new URL(url);
-      if (!["http:", "https:"].includes(u.protocol))
-        throw new Error("Usa una dirección HTTP o HTTPS.");
-      if (
-        ["localhost", "127.0.0.1", "0.0.0.0", "::1", "[::1]"].includes(
-          u.hostname,
-        )
-      )
-        throw new Error(
-          "Usa una dirección accesible desde los teléfonos, no localhost.",
-        );
-      const { default: QRCode } = await import("qrcode");
-      setQr(await QRCode.toDataURL(u.href, { width: 320, margin: 2 }));
-    } catch (e) {
-      setError((e as Error).message);
-    }
-  };
-  return (
-    <>
-      <div className="page-title">
-        <h1>Preparar la feria</h1>
-        <p>
-          Genera un QR cuando tengas la dirección real de la demostración, en
-          una red local accesible o un sitio publicado.
-        </p>
-      </div>
-      <form className="card" onSubmit={generate}>
-        <label>
-          Dirección de inicio o de una ruta
-          <input
-            type="url"
-            required
-            placeholder="https://tu-sitio/rutas/origenes"
-            value={url}
-            onChange={(e) => {
-              setUrl(e.target.value);
-              setQr("");
-            }}
-          />
-        </label>
-        <button>Generar QR</button>
-        {error && <p role="alert">{error}</p>}
-        {qr && (
-          <figure>
-            <img src={qr} alt="Código QR de la dirección de la demostración" />
-            <figcaption>{url}</figcaption>
-            <a href={qr} download="leon-en-el-tiempo-qr.png">
-              Descargar QR
-            </a>
-          </figure>
-        )}
-      </form>
-      <p className="notice">
-        El QR no publica el sitio. Prueba el enlace y el código en un teléfono
-        antes de imprimirlo.
-      </p>
-    </>
-  );
-}
 function NavIcon({ to }: { to: string }) {
   const paths: Record<string, string> = {
     "/explorar": "M3 5l6-2 6 2 6-2v16l-6 2-6-2-6 2V5zm6-2v16m6-14v16",
@@ -666,7 +595,6 @@ function App() {
           <RouterRoute path="/rutas" element={<RouteList />} />
           <RouterRoute path="/rutas/:slug" element={<RouteDetail />} />
           <RouterRoute path="/actividad" element={<Quiz />} />
-          <RouterRoute path="/feria" element={<Fair />} />
           <RouterRoute path="/admin" element={<ContentEditor />} />
           <RouterRoute
             path="*"
@@ -688,7 +616,7 @@ function App() {
           <br />
           Memoria con fuentes, tecnología con propósito.
         </p>
-        <div className="footer-links"><Link to="/feria">Preparar feria y QR</Link><Link to="/admin">Administrar contenidos locales</Link></div>
+        <div className="footer-links"><Link to="/admin">Panel de administración</Link></div>
       </footer>
     </BrowserRouter>
   );

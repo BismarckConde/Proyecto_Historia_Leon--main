@@ -26,7 +26,6 @@ El build genera dist/. Un alojamiento estático debe devolver index.html en las 
 - Mapa Leaflet con límite departamental local y dos ubicaciones verificadas.
 - Cuatro acontecimientos y cuatro rutas educativas.
 - Mini-quiz de cuatro preguntas, progreso, respuestas con feedback inmediato y explicación.
-- Generación y descarga de QR.
 - Panel de administración en /admin con acceso Google vía Supabase, gestión de lugares/fotos mediante URL y editor avanzado del catálogo.
 - Temas claro/oscuro de alto contraste, navegación inferior móvil, fichas inferiores en el mapa y filtros por tema. Títulos clásicos y texto de interfaz legible; animaciones con movimiento reducido.
 - Línea del tiempo con anclas por año, ilustración de la Catedral y mapa local de León Viejo. El contexto completo sigue disponible.
@@ -71,7 +70,7 @@ Playwright inicia Vite en 5187 y una compilación de producción en 4187 automá
 
 ## Alcance
 
-La PWA funciona en producción con HTTPS o localhost. Tras el aviso «Guía guardada», el catálogo, cuestionario, imágenes incluidas y mapa básico (límite y dos lugares verificados) se pueden abrir y recargar sin conexión. Los mosaicos de calles OpenStreetMap y enlaces a fuentes requieren Internet; no se descargan regiones de mosaicos. Los archivos externos añadidos al catálogo no se guardan automáticamente. El navegador puede liberar almacenamiento, y la primera visita necesita conexión. El QR no publica el sitio.
+La PWA funciona en producción con HTTPS o localhost. Tras el aviso «Guía guardada», el catálogo, cuestionario, imágenes incluidas y mapa básico (límite y dos lugares verificados) se pueden abrir y recargar sin conexión. Los mosaicos de calles OpenStreetMap y enlaces a fuentes requieren Internet; no se descargan regiones de mosaicos. Los archivos externos añadidos al catálogo no se guardan automáticamente. El navegador puede liberar almacenamiento, y la primera visita necesita conexión.
 
 Para comprobarlo: ejecutar `npm.cmd run build`, después `npm.cmd run preview -- --port 4173`, abrir http://localhost:4173, esperar «Guía guardada», activar Offline en DevTools y recargar /explorar. La PWA está desactivada en el servidor de desarrollo para evitar versiones obsoletas. Después de publicar una actualización, cerrar todas las pestañas de la app y volver a abrirla permite activar la nueva caché.
 
