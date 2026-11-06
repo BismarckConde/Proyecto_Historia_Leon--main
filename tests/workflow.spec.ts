@@ -1,6 +1,37 @@
 import { test, expect } from "@playwright/test";
 import catalog from "../src/data/catalog.json" with { type: "json" };
-import { STORAGE_KEY, gradeQuiz, validateCatalog } from "../src/content";
+import { STORAGE_KEY, gradeQuiz, validateCatalog, completeLegacyCoordinates } from "../src/content";
+
+test.beforeEach(async ({ page }) => {
+  // These tests exercise local content independently of the connected remote draft.
+  await page.route("**/rest/v1/content_catalog*", route => route.fulfill({ json: null }));
+});
+
+test("completa las seis ubicaciones del catálogo anterior y conserva ediciones", async ({ page }) => {
+  const legacy = structuredClone(catalog);
+  for (const place of legacy.places.slice(2)) {
+    Object.assign(place, { latitude: null, longitude: null, coordinate_source: null });
+  }
+  legacy.places[2].description = "Descripción local editada";
+  legacy.places[7].name = "Teatro Municipal ";
+  const completed = completeLegacyCoordinates(validateCatalog(legacy));
+  expect(completed.places[2].description).toBe("Descripción local editada");
+  expect(completed.places.every(p => p.coordinate_source?.verified && p.latitude !== null && p.longitude !== null)).toBe(true);
+  completed.places[2].latitude = 12.435;
+  expect(completeLegacyCoordinates(completed).places[2].latitude).toBe(12.435);
+  await page.addInitScript(({ key, data }) => localStorage.setItem(key, JSON.stringify(data)), { key: STORAGE_KEY, data: legacy });
+  await page.route("https://*.tile.openstreetmap.org/**", route => route.abort());
+  await page.goto("/explorar");
+  await expect(page.locator(".place-marker")).toHaveCount(8);
+  for (const place of catalog.places) {
+    await page.locator(`.place-marker[data-place="${place.slug}"]`).focus();
+    await page.keyboard.press("Enter");
+    await expect(page.locator("#map-place-title")).toHaveText(legacy.places.find(p => p.slug === place.slug)!.name.trim());
+    await page.keyboard.press("Escape");
+  }
+  await page.getByLabel("Buscar un lugar").fill("recolección");
+  await expect(page.locator(".place-marker")).toHaveCount(1);
+});
 test("inicio, buscador y ficha reales", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("link", { name: "Iniciar recorrido" }).click();
@@ -101,8 +132,9 @@ test("mapa, mosaicos fallidos y línea del tiempo con datos reales del catálogo
     route.abort(),
   );
   await page.goto("/explorar");
-  await expect(page.locator(".place-marker")).toHaveCount(2);
-  await page.locator(".place-marker").first().click();
+  await expect(page.locator(".place-marker")).toHaveCount(8);
+  await page.locator('.place-marker[data-place="catedral"]').focus();
+  await page.keyboard.press("Enter");
   await page
     .locator(".map-sheet")
     .getByRole("link", { name: "Abrir ficha" })

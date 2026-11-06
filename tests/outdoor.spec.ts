@@ -47,7 +47,7 @@ test("PWA: recarga y rutas nunca visitadas sin conexión", async ({ page, contex
   await context.setOffline(true);
   await page.goto("http://127.0.0.1:4187/explorar");
   await expect(page.getByRole("heading", { name: "Explorar León", exact: true })).toBeVisible();
-  await expect(page.locator(".place-marker")).toHaveCount(2);
+  await expect(page.locator(".place-marker")).toHaveCount(8);
   await expect(page.locator(".map-message")).toContainText("Mapa básico local");
   await page.reload();
   await expect(page.locator(".grid .card")).toHaveCount(8);
@@ -75,7 +75,8 @@ test("ficha por estados y ubicación solicitada solo al tocar el control", async
   await context.setGeolocation({ latitude: 12.434, longitude: -86.878 });
   await page.route("https://*.tile.openstreetmap.org/**", route => route.abort());
   await page.goto("/explorar");
-  await page.locator(".place-marker").first().click();
+  await page.locator('.place-marker[data-place="catedral"]').focus();
+  await page.keyboard.press("Enter");
   await expect(page.locator(".sheet-compact")).toBeVisible();
   await page.getByRole("button", { name: "Ver detalles" }).click();
   await expect(page.locator(".sheet-details")).toBeVisible();

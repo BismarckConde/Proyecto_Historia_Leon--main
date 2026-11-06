@@ -13,7 +13,7 @@ Estas URLs se registraron como referencias pendientes, **no como fuentes ya cons
 
 Prioridades restantes: consulta directa de UNESCO, Instituto Nicaragüense de Cultura, MINED, UNAN-León, archivos y museos, y publicaciones académicas. Las otras seis fichas tienen paráfrasis citadas del portal turístico, pero necesitan fuentes específicas y contraste.
 
-La selección procede del estudiante. Se contrastó León Viejo con la ficha Arquitectura de La Paz Centro y los dos sitios mapeados con OSM/Nominatim. Los restantes seis lugares aparecen en la ficha institucional del municipio de León, pero sus coordenadas no se verificaron.
+La selección procede del estudiante. Se contrastó León Viejo con la ficha Arquitectura de La Paz Centro y los dos sitios mapeados con OSM/Nominatim. Los restantes seis lugares aparecen en la ficha institucional del municipio de León; sus coordenadas se completaron el 2026-11-06 mediante los registros OSM publicados en Mapcarta (ver actualización al final).
 
 ## Ficha de registro documental
 - Sitio / acontecimiento.
@@ -51,3 +51,16 @@ Método: lectura del campo `content.rendered` en `/wp-json/wp/v2/posts/1727`, `/
 - Departamento: https://www.openstreetmap.org/relation/2194905 — objeto administrativo de rango estatal, código NI-LE. Geometría consultada con `state=León&country=Nicaragua&polygon_geojson=1&polygon_threshold=0.005`; versión simplificada, orientativa. Guardada en `src/data/leon-department.json`.
 
 Datos © OpenStreetMap contributors, ODbL 1.0. https://www.openstreetmap.org/copyright. Consulta mediante Nominatim; coordenadas WGS84 en grados decimales. No se afirma precisión catastral ni validación sobre el terreno. La cartografía no sustituye una fuente histórica.
+
+## Actualización cartográfica — 2026-11-06
+
+Se completaron los seis puntos pendientes con coordenadas WGS84 de OpenStreetMap consultadas mediante Mapcarta. Las fuentes y notas están en `coordinate_source` de cada ficha.
+
+- Museo y Archivo Rubén Darío: 12.43489, -86.88287. https://mapcarta.com/W388108881
+- Barrio y patrimonio cultural de Sutiaba: 12.43212, -86.89365. https://mapcarta.com/N2914699296
+- Iglesia de San Juan Bautista de Sutiaba: 12.4336, -86.89491. https://mapcarta.com/W202900221
+- Museo de Leyendas y Tradiciones Coronel Joaquín de Arrechavala: 12.43215, -86.87883. https://mapcarta.com/W312935994
+- Iglesia de La Recolección: 12.43752, -86.877. https://mapcarta.com/W415136134
+- Teatro Municipal José de la Cruz Mena: 12.43371, -86.88066. https://mapcarta.com/W312932871
+
+Sutiaba usa el punto de referencia del barrio, distinto al edificio de la iglesia; no delimita su territorio. En las páginas del teatro y del Museo de Leyendas hay una etiqueta departamental inconsistente: se tomó el objeto cartográfico cuya descripción, dirección y posición corresponden a León. Son posiciones orientativas, no una comprobación sobre el terreno. Datos © OpenStreetMap contributors, ODbL 1.0.

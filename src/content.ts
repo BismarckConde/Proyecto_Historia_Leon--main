@@ -93,11 +93,22 @@ export function validateCatalog(value: unknown): Catalog {
   return catalog;
 }
 
+// Complete the six legacy entries without replacing locally edited content or coordinates.
+export function completeLegacyCoordinates(catalog: Catalog): Catalog {
+  return { ...catalog, places: catalog.places.map(place => {
+    if (place.latitude !== null || place.longitude !== null || place.coordinate_source !== null) return place;
+    const original = initialCatalog.places.find(p => p.slug === place.slug && p.id === place.id && p.municipality === place.municipality);
+    if (!original?.coordinate_source?.verified) return place;
+    return { ...place, latitude: original.latitude, longitude: original.longitude,
+      coordinate_source: structuredClone(original.coordinate_source) };
+  }) };
+}
+
 export function loadCatalog(): Catalog {
   let saved: string | null;
   try { saved = localStorage.getItem(STORAGE_KEY); }
   catch { return validateCatalog(initialCatalog); }
-  try { return validateCatalog(saved ? JSON.parse(saved) : initialCatalog); }
+  try { return completeLegacyCoordinates(validateCatalog(saved ? JSON.parse(saved) : initialCatalog)); }
   catch { throw new Error("Los contenidos locales no son válidos. Abre Administrar contenidos locales para corregirlos o restaurar el catálogo original."); }
 }
 
@@ -124,10 +135,10 @@ function resolvedContent(catalog: Catalog) {
 
 export async function readContent<T>(path: string): Promise<T> {
   let catalog = loadCatalog();
-  if (supabase) {
+  if (supabase && (typeof navigator === "undefined" || navigator.onLine)) {
     const { data: row } = await supabase.from("content_catalog").select("catalog").eq("id", 1).maybeSingle();
     if (row?.catalog) {
-      try { catalog = validateCatalog(row.catalog); saveCatalog(catalog); }
+      try { catalog = completeLegacyCoordinates(validateCatalog(row.catalog)); saveCatalog(catalog); }
       catch { /* Keep the last valid local catalog if a remote draft is malformed. */ }
     }
   }

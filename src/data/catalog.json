@@ -253,8 +253,8 @@
       "category": "Literatura",
       "period": "",
       "review_status": "pending",
-      "latitude": null,
-      "longitude": null,
+      "latitude": 12.43489,
+      "longitude": -86.88287,
       "description": "Según Mapa Nacional de Turismo, el Museo Archivo Rubén Darío conserva manuscritos, primeras ediciones, documentos, objetos personales y fotografías del poeta.",
       "context": "La ficha institucional vincula la casa con la infancia de Darío. Se necesita consultar UNAN-León y el museo para ampliar antecedentes y criterios de conservación del archivo.",
       "significance": "Su colección ofrece una entrada documental a la memoria literaria. No se confunde este museo de León con la casa natal de Ciudad Darío.",
@@ -288,7 +288,16 @@
           "id": 7
         }
       ],
-      "coordinate_source": null,
+      "coordinate_source": {
+        "id": 103,
+        "title": "Museo y Archivo Rubén Darío · ubicación cartográfica",
+        "institution": "OpenStreetMap contributors · consulta mediante Mapcarta",
+        "url": "https://mapcarta.com/W388108881",
+        "publication_date": "",
+        "accessed_on": "2026-11-06",
+        "verified": true,
+        "notes": "Coordenadas WGS84 consultadas en Mapcarta, procedentes del objeto OSM way/388108881. Datos © OpenStreetMap contributors, ODbL 1.0. Ubicación orientativa, sin verificación sobre el terreno."
+      },
       "media": []
     },
     {
@@ -299,8 +308,8 @@
       "category": "Memoria y tradiciones",
       "period": "",
       "review_status": "pending",
-      "latitude": null,
-      "longitude": null,
+      "latitude": 12.43212,
+      "longitude": -86.89365,
       "description": "Mapa Nacional de Turismo identifica las alfombras de aserrín de Semana Santa en Sutiaba como una expresión de arte religioso y participación familiar.",
       "context": "La investigación abordará la historia de la comunidad y su patrimonio material e inmaterial. No se han recopilado testimonios ni se atribuyen interpretaciones a integrantes de la comunidad.",
       "significance": "Las prácticas artísticas y comunitarias permiten investigar memoria e identidad, respetando las voces de sus participantes y distinguiendo descripción institucional de testimonio directo.",
@@ -334,7 +343,16 @@
           "id": 8
         }
       ],
-      "coordinate_source": null,
+      "coordinate_source": {
+        "id": 104,
+        "title": "Barrio y patrimonio cultural de Sutiaba · ubicación cartográfica",
+        "institution": "OpenStreetMap contributors · consulta mediante Mapcarta",
+        "url": "https://mapcarta.com/N2914699296",
+        "publication_date": "",
+        "accessed_on": "2026-11-06",
+        "verified": true,
+        "notes": "Coordenadas WGS84 consultadas en Mapcarta, procedentes del objeto OSM node/2914699296. Datos © OpenStreetMap contributors, ODbL 1.0. Ubicación orientativa, sin verificación sobre el terreno. Punto de referencia del barrio; no representa un edificio ni sus límites."
+      },
       "media": []
     },
     {
@@ -345,8 +363,8 @@
       "category": "Arquitectura",
       "period": "",
       "review_status": "pending",
-      "latitude": null,
-      "longitude": null,
+      "latitude": 12.4336,
+      "longitude": -86.89491,
       "description": "La descripción institucional de San Juan Bautista de Sutiaba destaca su frontispicio de influencia barroca y una planta en cruz latina.",
       "context": "El estudio de su relación con la comunidad requiere ampliar las fuentes documentales y consultar a sus responsables; esa investigación sigue pendiente.",
       "significance": "Permite explorar el patrimonio arquitectónico de Sutiaba sin reducir la historia comunitaria a un solo edificio.",
@@ -380,7 +398,16 @@
           "id": 9
         }
       ],
-      "coordinate_source": null,
+      "coordinate_source": {
+        "id": 105,
+        "title": "Iglesia de San Juan Bautista de Sutiaba · ubicación cartográfica",
+        "institution": "OpenStreetMap contributors · consulta mediante Mapcarta",
+        "url": "https://mapcarta.com/W202900221",
+        "publication_date": "",
+        "accessed_on": "2026-11-06",
+        "verified": true,
+        "notes": "Coordenadas WGS84 consultadas en Mapcarta, procedentes del objeto OSM way/202900221. Datos © OpenStreetMap contributors, ODbL 1.0. Ubicación orientativa, sin verificación sobre el terreno."
+      },
       "media": []
     },
     {
@@ -391,8 +418,8 @@
       "category": "Memoria y tradiciones",
       "period": "",
       "review_status": "pending",
-      "latitude": null,
-      "longitude": null,
+      "latitude": 12.43215,
+      "longitude": -86.87883,
       "description": "Mapa Nacional de Turismo presenta el museo como un espacio que recrea personajes de mitos y leyendas mediante figuras y esculturas de artesanos locales.",
       "context": "La fuente distingue el edificio, descrito como la antigua Cárcel La 21, del contenido de tradición oral expuesto. Falta contrastar su trayectoria con archivos y responsables del museo.",
       "significance": "El espacio permite abordar memoria oral y memoria del edificio. Los personajes legendarios son relatos culturales, no pruebas de acontecimientos sobrenaturales.",
@@ -442,7 +469,16 @@
           "id": 11
         }
       ],
-      "coordinate_source": null,
+      "coordinate_source": {
+        "id": 106,
+        "title": "Museo de Leyendas y Tradiciones Coronel Joaquín de Arrechavala · ubicación cartográfica",
+        "institution": "OpenStreetMap contributors · consulta mediante Mapcarta",
+        "url": "https://mapcarta.com/W312935994",
+        "publication_date": "",
+        "accessed_on": "2026-11-06",
+        "verified": true,
+        "notes": "Coordenadas WGS84 consultadas en Mapcarta, procedentes del objeto OSM way/312935994. Datos © OpenStreetMap contributors, ODbL 1.0. Ubicación orientativa, sin verificación sobre el terreno. La etiqueta departamental de Mapcarta es inconsistente; el objeto, su descripción y las coordenadas corresponden a la ciudad de León."
+      },
       "media": []
     },
     {
@@ -453,8 +489,8 @@
       "category": "Arquitectura",
       "period": "",
       "review_status": "pending",
-      "latitude": null,
-      "longitude": null,
+      "latitude": 12.43752,
+      "longitude": -86.877,
       "description": "La ficha institucional de La Recolección destaca su fachada labrada en cantería, de estilo barroco mexicano, y altares de estilo neoclásico.",
       "context": "La investigación comparará la descripción arquitectónica con documentos del templo y fuentes patrimoniales antes de ampliar su cronología.",
       "significance": "Es un caso para estudiar lenguajes arquitectónicos y patrimonio religioso en la ciudad de León.",
@@ -488,7 +524,16 @@
           "id": 12
         }
       ],
-      "coordinate_source": null,
+      "coordinate_source": {
+        "id": 107,
+        "title": "Iglesia de La Recolección · ubicación cartográfica",
+        "institution": "OpenStreetMap contributors · consulta mediante Mapcarta",
+        "url": "https://mapcarta.com/W415136134",
+        "publication_date": "",
+        "accessed_on": "2026-11-06",
+        "verified": true,
+        "notes": "Coordenadas WGS84 consultadas en Mapcarta, procedentes del objeto OSM way/415136134. Datos © OpenStreetMap contributors, ODbL 1.0. Ubicación orientativa, sin verificación sobre el terreno."
+      },
       "media": []
     },
     {
@@ -499,8 +544,8 @@
       "category": "Artes",
       "period": "",
       "review_status": "pending",
-      "latitude": null,
-      "longitude": null,
+      "latitude": 12.43371,
+      "longitude": -86.88066,
       "description": "Mapa Nacional de Turismo describe el Teatro Municipal José de la Cruz Mena como un edificio de dos plantas cuya fachada combina elementos barrocos coloniales y neoclásicos.",
       "context": "La investigación ampliará su trayectoria, programación y vínculo con las artes mediante fuentes municipales y documentos del teatro.",
       "significance": "La fuente vincula el nombre del teatro con el legado musical de José de la Cruz Mena, como parte de las expresiones artísticas leonesas.",
@@ -550,7 +595,16 @@
           "id": 14
         }
       ],
-      "coordinate_source": null,
+      "coordinate_source": {
+        "id": 108,
+        "title": "Teatro Municipal José de la Cruz Mena · ubicación cartográfica",
+        "institution": "OpenStreetMap contributors · consulta mediante Mapcarta",
+        "url": "https://mapcarta.com/W312932871",
+        "publication_date": "",
+        "accessed_on": "2026-11-06",
+        "verified": true,
+        "notes": "Coordenadas WGS84 consultadas en Mapcarta, procedentes del objeto OSM way/312932871. Datos © OpenStreetMap contributors, ODbL 1.0. Ubicación orientativa, sin verificación sobre el terreno. La etiqueta departamental de Mapcarta es inconsistente; el objeto, su descripción y las coordenadas corresponden a la ciudad de León."
+      },
       "media": []
     }
   ],
