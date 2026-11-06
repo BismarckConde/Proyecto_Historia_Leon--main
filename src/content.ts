@@ -1,5 +1,6 @@
 import initialCatalog from "./data/catalog.json" with { type: "json" };
 import type { HistoricalEvent, Place, Question, Route, Source } from "./types";
+import { supabase } from "./supabase";
 
 export const STORAGE_KEY = "leon-en-el-tiempo.catalog.v1";
 export type Catalog = {
@@ -122,7 +123,15 @@ function resolvedContent(catalog: Catalog) {
 }
 
 export async function readContent<T>(path: string): Promise<T> {
-  const data = resolvedContent(loadCatalog());
+  let catalog = loadCatalog();
+  if (supabase) {
+    const { data: row } = await supabase.from("content_catalog").select("catalog").eq("id", 1).maybeSingle();
+    if (row?.catalog) {
+      try { catalog = validateCatalog(row.catalog); saveCatalog(catalog); }
+      catch { /* Keep the last valid local catalog if a remote draft is malformed. */ }
+    }
+  }
+  const data = resolvedContent(catalog);
   const [collection, slug] = path.split("/");
   if (collection === "places" || collection === "routes") {
     const items = data[collection];

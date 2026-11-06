@@ -27,12 +27,20 @@ El build genera dist/. Un alojamiento estático debe devolver index.html en las 
 - Cuatro acontecimientos y cuatro rutas educativas.
 - Mini-quiz de cuatro preguntas, progreso, respuestas con feedback inmediato y explicación.
 - Generación y descarga de QR.
-- Editor JSON en /admin: validación, importación, exportación, guardado local y restauración.
+- Panel de administración en /admin con acceso Google vía Supabase, gestión de lugares/fotos mediante URL y editor avanzado del catálogo.
 - Temas claro/oscuro de alto contraste, navegación inferior móvil, fichas inferiores en el mapa y filtros por tema. Títulos clásicos y texto de interfaz legible; animaciones con movimiento reducido.
 - Línea del tiempo con anclas por año, ilustración de la Catedral y mapa local de León Viejo. El contexto completo sigue disponible.
 - PWA instalable con catálogo, imágenes y mapa básico local disponibles después de la primera carga completa de producción.
 
-El editor guarda cambios en localStorage de ese navegador y origen. No hay cuentas ni sincronización entre dispositivos. Para compartir cambios, exportar el catálogo, reemplazar src/data/catalog.json y compilar. Las respuestas de la actividad se incluyen en la aplicación; no es un examen protegido.
+## Configurar el panel de administración
+
+1. En Supabase, habilita Google en Authentication → Providers y configura las URLs de redirección de desarrollo y producción terminadas en `/admin`.
+2. Copia `.env.example` como `.env.local` y completa `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` y la URL de retorno.
+3. Ejecuta `supabase/schema.sql` en SQL Editor.
+4. Inicia sesión una vez en `/admin` con Google. En Authentication → Users, copia el UUID de esa cuenta y agrégalo a `public.admin_users` según el comentario al final del SQL.
+5. Actualiza `/admin`. Ya podrás crear, editar y eliminar lugares. Las fichas y el resto del catálogo se comparten entre visitantes desde Supabase. Al seleccionar una foto, el archivo se sube a Supabase Storage y solo su URL pública se guarda en el catálogo.
+
+El catálogo inicial sigue siendo `src/data/catalog.json` y funciona como respaldo cuando la tabla remota aún no tiene contenido o Supabase no está disponible. La clave `anon` es pública y queda sujeta a RLS; nunca pongas la clave `service_role` en el frontend.
 
 ## Pruebas
 
@@ -51,7 +59,8 @@ Playwright inicia Vite en 5187 y una compilación de producción en 4187 automá
 - src/OfflineStatus.tsx: instalación del service worker y estado de conexión.
 - public/manifest.webmanifest y vite.config.ts: instalación PWA y generación de caché versionada.
 - src/content.ts: validación, lectura, almacenamiento y calificación.
-- src/ContentEditor.tsx: gestión local de contenidos.
+- src/ContentEditor.tsx: panel de administración y gestión de contenidos.
+- src/supabase.ts y supabase/schema.sql: cliente, tablas y políticas de acceso.
 - src/types.ts: tipos del dominio.
 - src/data/catalog.json: historia, fuentes, rutas y preguntas.
 - src/data/leon-department.json: geometría del departamento.

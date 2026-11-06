@@ -66,8 +66,10 @@ function Status({ place }: { place: Place }) {
 }
 function PlaceCard({ place, selected, onSelect }: { place: Place; selected?: boolean; onSelect?: () => void }) {
   const location = useLocation();
+  const photo = place.media.find(item => item.kind === "image");
   return (
     <article className={"card place-card" + (selected ? " is-selected" : "")} data-place-slug={place.slug}>
+      {photo && <img className="place-card-image" src={photo.url} alt={photo.alt_text || `Fotografía de ${place.name}`} loading="lazy" />}
       <p className="place-category">{place.category}</p>
       <h3>
         <Link state={{ from: location.pathname }} onClick={() => remember("selected-place", place.slug)} to={"/lugares/" + place.slug}>{place.name}</Link>
