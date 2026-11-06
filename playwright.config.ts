@@ -5,7 +5,7 @@ export default defineConfig({
   workers: 1,
   reporter: [["list"], ["json", { outputFile: "test-results/results.json" }]],
   use: {
-    baseURL: "http://127.0.0.1:5173",
+    baseURL: "http://127.0.0.1:5187",
     headless: true,
     launchOptions: {
       executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE || undefined,
@@ -14,12 +14,12 @@ export default defineConfig({
     screenshot: "only-on-failure",
   },
   webServer: [{
-    command: "npm run dev -- --port 5173 --strictPort",
-    url: "http://127.0.0.1:5173",
+    command: "npm run dev -- --port 5187 --strictPort",
+    url: "http://127.0.0.1:5187",
     reuseExistingServer: !process.env.CI,
   }, {
-    command: "npm run build && npm run preview -- --host 127.0.0.1 --port 4173 --strictPort",
-    url: "http://127.0.0.1:4173",
+    command: "npm run build && npm run preview -- --host 127.0.0.1 --port 4187 --strictPort",
+    url: "http://127.0.0.1:4187",
     reuseExistingServer: !process.env.CI,
   }],
 });

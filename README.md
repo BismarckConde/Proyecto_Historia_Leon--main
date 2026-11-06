@@ -41,7 +41,7 @@ npx.cmd playwright install chromium
 npm.cmd run test:e2e
 ```
 
-Playwright inicia Vite en 5173 y una compilación de producción en 4173 automáticamente. No hay API que arrancar. Para usar Chrome instalado en Windows: `$env:PLAYWRIGHT_CHROMIUM_EXECUTABLE='C:\Program Files\Google\Chrome\Application\chrome.exe'`.
+Playwright inicia Vite en 5187 y una compilación de producción en 4187 automáticamente. No hay API que arrancar. Para usar Chrome instalado en Windows: `$env:PLAYWRIGHT_CHROMIUM_EXECUTABLE='C:\Program Files\Google\Chrome\Application\chrome.exe'`.
 
 ## Estructura
 

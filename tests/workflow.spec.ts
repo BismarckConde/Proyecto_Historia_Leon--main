@@ -9,7 +9,7 @@ test("inicio, buscador y ficha reales", async ({ page }) => {
   ).toBeVisible();
   await page.getByLabel("Buscar un lugar").fill("catedral");
   await expect(page.locator(".grid .card")).toHaveCount(1);
-  await page.getByRole("link", { name: "Explorar ficha" }).click();
+  await page.getByRole("link", { name: "Ver lugar" }).click();
   await expect(
     page.getByRole("heading", { name: "Catedral de León", exact: true }),
   ).toBeVisible();
@@ -52,6 +52,7 @@ test("ilustración local y movimiento reducido", async ({ page }) => {
 });
 test("filtro municipal y ruta digital reales", async ({ page }) => {
   await page.goto("/explorar");
+  await page.locator(".advanced-filters > summary").click();
   await page
     .getByLabel("Municipio", { exact: true })
     .selectOption("La Paz Centro");
@@ -68,6 +69,7 @@ test("actividad calificada localmente", async ({ page }) => {
   await page.goto("/actividad");
   for (const option of ["Como investigación por verificar", "Mediante la lista de lugares", "1524", "Rubén Darío"]) {
     await page.getByRole("button", { name: option, exact: true }).click();
+    await page.getByRole("button", { name: "Comprobar respuesta" }).click();
     await expect(page.locator(".quiz-feedback")).toContainText("¡Respuesta correcta!");
     await page.getByRole("button", { name: /Siguiente pregunta|Finalizar actividad/ }).click();
   }
@@ -75,6 +77,7 @@ test("actividad calificada localmente", async ({ page }) => {
   await page.getByRole("button", { name: "Repetir actividad" }).click();
   for (const option of ["Como un hecho histórico demostrado", "No se pueden consultar", "1967", "José de la Cruz Mena"]) {
     await page.getByRole("button", { name: option, exact: true }).click();
+    await page.getByRole("button", { name: "Comprobar respuesta" }).click();
     await expect(page.locator(".quiz-feedback")).toContainText("Esta vez no");
     await page.getByRole("button", { name: /Siguiente pregunta|Finalizar actividad/ }).click();
   }

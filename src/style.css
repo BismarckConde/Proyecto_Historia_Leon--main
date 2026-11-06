@@ -984,3 +984,104 @@ footer p {
     scroll-behavior: auto!important;
   }
 }
+/* Outdoor exploration: keep the map in the first mobile viewport. */
+:root { font-size: 18px; }
+.explore-title { margin: 0 0 16px; }
+.explore-title h1 { font-size: clamp(2rem, 4vw, 3rem); margin: 0; }
+.explore-search { display: flex; align-items: end; gap: 16px; position: relative; }
+.explore-search > label { flex: 1; }
+.explore-search input { margin-bottom: 0; }
+.advanced-filters { margin-bottom: 0; }
+.advanced-filters > summary { min-height: 52px; border: 1px solid var(--line); border-radius: 8px; padding: 12px 18px; cursor: pointer; font-weight: 650; }
+.advanced-filters[open] { flex: 1; }
+.advanced-filters[open] .filters { padding-top: 16px; }
+.filter-chips { margin-top: 12px; margin-bottom: 0; }
+.map-panel { margin-top: 12px; }
+.map-panel .section-heading { margin-bottom: 12px; }
+.map-panel h2 { font-size: 1.2rem; }
+.map-tools { position: absolute; left: 12px; bottom: 16px; display: flex; gap: 8px; z-index: 2; }
+.map-tools .map-reset { position: static; }
+.map-locate { background: var(--page); color: var(--text); border-color: var(--line); }
+.map-locate:hover { background: var(--surface); }
+.map-stage:has(.map-sheet) .map-tools { top: 12px; bottom: auto; }
+.map-sheet { max-width: 600px; max-height: 82%; }
+.sheet-compact { max-height: 48%; }
+.map-sheet .sheet-close { float: none; display: block; margin-left: auto; }
+.map-sheet h3 { margin-top: 8px; }
+.sheet-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+.sheet-actions > * { flex: 1; padding: 10px 12px; }
+.sheet-history h4 { margin: 20px 0 8px; }
+.distance-label { font-weight: 650; font-size: .9rem; }
+.next-event { display: inline-flex; align-items: center; min-height: 48px; font-weight: 650; }
+.event-expand { margin-bottom: 16px; }
+.quiz-option.is-selected { border: 2px solid var(--text); background: var(--surface); }
+.achievement { padding: 16px; background: var(--surface); color: var(--text); font-weight: 650; }
+@media (max-width: 760px) {
+  main:has(.explore-title) .connection-note { display: none; }
+  main:has(.explore-title) { padding-top: 16px; }
+  .explore-search { align-items: end; flex-wrap: wrap; gap: 8px; }
+  .explore-search > label { font-size: .85rem; min-width: 190px; }
+  .explore-search input { min-height: 48px; }
+  .advanced-filters > summary { min-height: 48px; padding: 10px 12px; font-size: .85rem; }
+  .advanced-filters[open] { flex-basis: 100%; }
+  .map-panel .section-heading { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+  .map-panel .section-heading span { font-size: .8rem; }
+  .map { height: 500px; }
+  .map-tools button { font-size: .8rem; padding: 10px 12px; }
+  .map-sheet { right: 0; left: 0; max-height: 78%; padding: 12px 16px 16px; }
+  .map-sheet h3 { font-size: 1.2rem; }
+  .map-sheet.sheet-compact { max-height: 50%; }
+  .map-stage:has(.map-sheet) .map-reset { visibility: visible; }
+  .sheet-actions { font-size: .85rem; }
+  .timeline li { gap: 16px; grid-template-columns: 72px minmax(0, 1fr); }
+  .page-title:has(+ label) h1 { font-size: 2rem; }
+  .quiz-layout .page-title h1 { font-size: 2rem; }
+}
+/* Reserve the attribution strip and keep map controls above the mobile nav. */
+.map-tools { bottom: 52px; }
+.map .leaflet-control-zoom { margin-bottom: 44px; }
+@media (max-width: 760px) {
+  .map { height: clamp(340px, calc(100svh - 500px), 500px); }
+  .map-sheet.sheet-compact { max-height: 68%; }
+  .quiz-layout .page-title { margin-top: 12px; }
+}
+/* Cards and navigation: motion only acknowledges a deliberate interaction. */
+.place-card { position: relative; transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease; }
+.place-card h3 { font-size: 1.35rem; margin-bottom: 12px; }
+.place-card .place-category { margin: 0 0 8px; font-size: .8rem; color: var(--muted); font-weight: 650; }
+.place-card .place-summary { display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.place-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: auto; width: 100%; }
+.place-actions a { min-height: 48px; display: inline-flex; align-items: center; }
+.place-actions button { margin-left: auto; font-size: .85rem; padding: 10px 12px; }
+.place-card.is-selected { border: 2px solid var(--text); background: var(--surface); }
+.place-card:active { background: var(--surface); }
+.catalog-view { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: 12px; margin: 0 0 24px; }
+.catalog-view button { background: var(--page); color: var(--text); border-color: transparent; font-size: .9rem; }
+.catalog-view button[aria-pressed="true"] { background: var(--text); color: var(--page); }
+.compact-catalog { grid-template-columns: 1fr; gap: 12px; }
+.compact-catalog .place-card { display: grid; grid-template-columns: 1fr auto; gap: 8px 24px; padding: 18px 22px; }
+.compact-catalog .place-category { grid-column: 1; margin: 0; }
+.compact-catalog h3 { grid-column: 1; margin: 0; }
+.compact-catalog .badge { grid-column: 1; justify-self: start; }
+.compact-catalog .place-summary { display: none; }
+.compact-catalog .place-actions { grid-column: 2; grid-row: 1 / 4; flex-direction: column; justify-content: center; align-items: stretch; }
+.compact-catalog .place-actions button { margin-left: 0; }
+.selected-marker span { outline: 3px solid #173c37; outline-offset: 3px; }
+.place-marker span { transition: outline-color 150ms ease, background-color 150ms ease; }
+.nav-icon { width: 22px; height: 22px; flex-shrink: 0; }
+.header-controls nav a { gap: 8px; transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease; }
+.route-status { margin: 0 0 16px; color: var(--accent); font-weight: 650; }
+.route-preview { padding-left: 22px; margin: 0 0 16px; }
+.route-preview li { padding: 4px 0; }
+.review-stop { margin: 20px 0 0; }
+.review-stop.reviewed-stop { background: var(--surface); color: var(--success); border-color: var(--success); opacity: 1; }
+.route-review-count { font-weight: 650; }
+.map-sheet { transition: max-height 250ms cubic-bezier(.16,1,.3,1); }
+@media (hover: none) { .grid .card:hover { transform: none; } }
+@media (max-width: 760px) {
+  .header-controls nav a { flex-direction: column; gap: 3px; font-size: .78rem; }
+  .compact-catalog .place-card { gap: 8px; padding: 18px; }
+  .compact-catalog .place-actions { grid-column: 1; grid-row: auto; flex-direction: row; justify-content: space-between; }
+  .place-card h3 { font-size: 1.25rem; }
+  .place-actions { gap: 8px; }
+}

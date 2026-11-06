@@ -10,6 +10,8 @@ import {
   useLocation,
 } from "react-router-dom";
 import type { Place, HistoricalEvent, Route } from "./types";
+import { recall, remember, useJourneyText, routeProgress } from "./journey";
+import { JourneyScroll } from "./JourneyScroll";
 import { PlaceMap } from "./PlaceMap";
 import { Quiz } from "./Quiz";
 import { OfflineStatus } from "./OfflineStatus";
@@ -62,17 +64,17 @@ function Status({ place }: { place: Place }) {
     </span>
   );
 }
-function PlaceCard({ place }: { place: Place }) {
+function PlaceCard({ place, selected, onSelect }: { place: Place; selected?: boolean; onSelect?: () => void }) {
+  const location = useLocation();
   return (
-    <article className="card">
+    <article className={"card place-card" + (selected ? " is-selected" : "")} data-place-slug={place.slug}>
+      <p className="place-category">{place.category}</p>
       <h3>
-        <Link to={"/lugares/" + place.slug}>{place.name}</Link>
+        <Link state={{ from: location.pathname }} onClick={() => remember("selected-place", place.slug)} to={"/lugares/" + place.slug}>{place.name}</Link>
       </h3>
       <Status place={place} />
-      <p>{place.description}</p>
-      <Link className="text-link" to={"/lugares/" + place.slug}>
-        Explorar ficha →
-      </Link>
+      <p className="place-summary">{place.description}</p>
+      <div className="place-actions"><Link className="text-link" state={{ from: location.pathname }} onClick={() => remember("selected-place", place.slug)} to={"/lugares/" + place.slug}>Ver lugar →</Link>{onSelect && <button className="secondary" onClick={onSelect}>Ver en mapa</button>}</div>
     </article>
   );
 }
@@ -151,10 +153,12 @@ function Home() {
 }
 function Explore() {
   const state = useData<Place[]>("places/");
-  const [q, setQ] = useState("");
-  const [municipality, setMunicipality] = useState("");
-  const [category, setCategory] = useState("");
-  const [period, setPeriod] = useState("");
+  const [q, setQ] = useJourneyText("explore-q");
+  const [municipality, setMunicipality] = useJourneyText("explore-municipality");
+  const [category, setCategory] = useJourneyText("explore-category");
+  const [period, setPeriod] = useJourneyText("explore-period");
+  const [view, setView] = useJourneyText("catalog-view", "cards");
+  const [selectedPlace, setSelectedPlace] = useJourneyText("selected-place");
   if (!state.data) return <State {...state} />;
   const all = state.data;
   const normalized = (s: string) =>
@@ -171,14 +175,11 @@ function Explore() {
   );
   return (
     <>
-      <div className="page-title">
+      <div className="page-title explore-title">
         <h1>Explorar León</h1>
-        <p>
-          Un departamento, distintos espacios de historia. Consulta cada ficha y
-          su estado de revisión.
-        </p>
+
       </div>
-      <div className="filters">
+      <div className="explore-search">
         <label>
           Buscar un lugar
           <input
@@ -187,6 +188,7 @@ function Explore() {
             placeholder="Nombre o descripción"
           />
         </label>
+        <details className="advanced-filters"><summary>Filtros{municipality || period ? " · activos" : ""}</summary><div className="filters">
         <label>
           Municipio
           <select
@@ -218,22 +220,24 @@ function Explore() {
             </select>
           </label>
         )}
-      </div>
+        <button className="secondary" onClick={() => { setMunicipality(""); setPeriod(""); }}>Limpiar filtros</button>
+      </div></details></div>
 <div className="filter-chips" role="group" aria-label="Filtrar por tema">
         {["", ...new Set(all.map(p => p.category))].map(value => <button key={value} aria-pressed={category === value} onClick={() => setCategory(value)}>{value || "Todos los temas"}</button>)}
       </div>
-      <PlaceMap places={filtered} />
-      <h2>
+      <PlaceMap places={filtered} selectedSlug={selectedPlace} onSelect={setSelectedPlace} />
+      <h2 id="lista-lugares" tabIndex={-1}>
         Lista de lugares <span className="small">({filtered.length})</span>
       </h2>
+<div className="catalog-view" role="group" aria-label="Presentación del catálogo"><button aria-pressed={view !== "compact"} onClick={() => setView("cards")}>Tarjetas</button><button aria-pressed={view === "compact"} onClick={() => setView("compact")}>Lista compacta</button></div>
       {!filtered.length && (
         <p role="status">
           No hay lugares que coincidan. Cambia la búsqueda o los filtros.
         </p>
       )}
-      <div className="grid">
+      <div className={"grid place-catalog " + (view === "compact" ? "compact-catalog" : "")}>
         {filtered.map((p) => (
-          <PlaceCard key={p.id} place={p} />
+          <PlaceCard key={p.id} place={p} selected={selectedPlace === p.slug} onSelect={p.coordinate_source?.verified && p.latitude !== null && p.longitude !== null ? () => { setSelectedPlace(p.slug); document.querySelector(".map-panel")?.scrollIntoView({ block: "start", behavior: "instant" }); } : undefined} />
         ))}
       </div>
     </>
@@ -241,12 +245,14 @@ function Explore() {
 }
 function PlaceDetail() {
   const { slug } = useParams();
+  const { state: navigation } = useLocation();
+  const backTo = typeof navigation?.from === "string" && /^\/rutas\/[a-z0-9-]+$/.test(navigation.from) ? navigation.from : "/explorar";
   const state = useData<Place>("places/" + slug + "/");
   if (!state.data) return <State {...state} />;
   const p = state.data;
   return (
     <>
-      <Link to="/explorar">← Volver al catálogo</Link>
+      <Link to={backTo}>{backTo === "/explorar" ? "← Volver a los resultados" : "← Volver al recorrido"}</Link>
       <div className="page-title">
         <h1>{p.name}</h1>
         <Status place={p} />
@@ -368,9 +374,22 @@ function PlaceDetail() {
     </>
   );
 }
+function EventSummary({ text }: { text: string }) {
+  const ref = useRef<HTMLParagraphElement>(null);
+  const [overflow, setOverflow] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+    const check = () => { if (!expanded) setOverflow(element.scrollHeight > element.clientHeight + 1); };
+    const observer = new ResizeObserver(check); observer.observe(element); check();
+    return () => observer.disconnect();
+  }, [text, expanded]);
+  return <><p ref={ref} className={expanded ? undefined : "clamp-three"}>{text}</p>{(overflow || expanded) && <button className="event-expand secondary" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>{expanded ? "Mostrar resumen" : "Leer contexto completo"}</button>}</>;
+}
 function Timeline() {
   const state = useData<HistoricalEvent[]>("events/");
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useJourneyText("timeline-filter");
   if (!state.data) return <State {...state} />;
   const verified = state.data.filter((e) => e.verified && e.source.verified);
   const events = verified.filter((e) => !selected || e.place_slug === selected);
@@ -406,20 +425,20 @@ function Timeline() {
         </div>
       ) : (
         <><nav className="timeline-anchors" aria-label="Saltar a un acontecimiento">{events.map(e => <a key={e.id} href={"#evento-" + e.id}>{e.year}</a>)}</nav><ol className="timeline">
-          {events.map((e) => (
+          {events.map((e, index) => (
             <li key={e.id} id={"evento-" + e.id}>
               <span className="year">{e.year}</span>
               <img className="timeline-image" src={e.place_slug === "catedral" ? cathedralImage : territoryImage} alt={e.place_slug === "catedral" ? "Ilustración de la Catedral de León" : "Mapa del departamento con la ubicación de León Viejo"} loading="lazy" />
               <div>
                 <h2>{e.title}</h2>
-                <p className="clamp-three">{e.description}</p>
-                <details className="event-description"><summary>Leer contexto completo</summary><p>{e.description}</p></details>
+                <EventSummary text={e.description} />
                 <Link to={"/lugares/" + e.place_slug}>
                   Abrir ficha de {e.place_name} →
                 </Link>
                 <p>
                   <a href={e.source.url}>Fuente: {e.source.institution}</a>
                 </p>
+                {events[index + 1] && <a className="next-event" href={"#evento-" + events[index + 1].id}>Siguiente hito: {events[index + 1].year} →</a>}
               </div>
             </li>
           ))}
@@ -441,18 +460,19 @@ function RouteList() {
         </p>
       </div>
       <div className="grid">
-        {state.data.map((r) => (
+        {state.data.map((r) => { const progress = routeProgress(r.slug, r.stops.map(s => s.place.slug)); const complete = r.stops.length > 0 && progress.reviewed.length === r.stops.length; return (
           <article className="card" key={r.id}>
-            <span className="number">
-              {String(r.stops.length).padStart(2, "0")}
-            </span>
+<p className="route-status">{complete ? "Recorrido completado" : progress.reviewed.length || progress.step ? "En curso" : "Por descubrir"} · {r.stops.length} paradas</p>
             <h2>{r.title}</h2>
             <p>{r.description}</p>
+            <ol className="route-preview">{r.stops.slice(0, 2).map(stop => <li key={stop.order}>{stop.place.name}</li>)}</ol>
+            {r.stops.length > 2 && <span className="small">Y {r.stops.length - 2} paradas más</span>}
+            <p className="small">{progress.reviewed.length} paradas revisadas</p>
             <Link className="button" to={"/rutas/" + r.slug}>
-              Comenzar ruta →
+              {complete ? "Revisar recorrido" : progress.reviewed.length || progress.step ? "Continuar recorrido" : "Explorar recorrido"} →
             </Link>
           </article>
-        ))}
+        ); })}
       </div>
     </>
   );
@@ -461,7 +481,13 @@ function RouteDetail() {
   const { slug } = useParams();
   const state = useData<Route>("routes/" + slug + "/");
   const [step, setStep] = useState(0);
-  useEffect(() => setStep(0), [slug]);
+  const [reviewed, setReviewed] = useState<string[]>([]);
+  useEffect(() => { if (state.data) { const progress = routeProgress(state.data.slug, state.data.stops.map(s => s.place.slug)); setStep(progress.step); setReviewed(progress.reviewed); } }, [state.data]);
+  function saveProgress(nextStep: number, nextReviewed: string[]) {
+    if (!state.data) return;
+    remember("route:" + state.data.slug, { step: nextStep, reviewed: nextReviewed, signature: JSON.stringify(state.data.stops.map(s => s.place.slug)) });
+    setStep(nextStep); setReviewed(nextReviewed);
+  }
   if (!state.data) return <State {...state} />;
   const r = state.data;
   const stop = r.stops[step];
@@ -478,23 +504,25 @@ function RouteDetail() {
             Parada {step + 1} de {r.stops.length}
           </p>
           <progress
-            value={step + 1}
+            value={reviewed.length}
             max={r.stops.length}
             aria-label="Progreso de la ruta"
           />
+          <p className="route-review-count" aria-live="polite">{reviewed.length} de {r.stops.length} paradas revisadas</p>
           <PlaceCard place={stop.place} />
+          <button className={"review-stop " + (reviewed.includes(stop.place.slug) ? "reviewed-stop" : "")} disabled={reviewed.includes(stop.place.slug)} onClick={() => saveProgress(step, [...reviewed, stop.place.slug])}>{reviewed.includes(stop.place.slug) ? "Parada revisada" : "Marcar parada como revisada"}</button>
           <p className="notice">Para reflexionar: {stop.prompt}</p>
           <div className="actions route-actions">
-            <button disabled={step === 0} onClick={() => setStep(step - 1)}>
+            <button disabled={step === 0} onClick={() => saveProgress(step - 1, reviewed)}>
               Anterior
             </button>
             {step < r.stops.length - 1 ? (
-              <button onClick={() => setStep(step + 1)}>
+              <button onClick={() => saveProgress(step + 1, reviewed)}>
                 Siguiente parada
               </button>
             ) : (
               <Link className="button" to="/actividad">
-                Ruta terminada · Ir a la actividad
+                {reviewed.length === r.stops.length ? "Recorrido revisado · Ir al quiz" : "Ir al quiz"}
               </Link>
             )}
           </div>
@@ -573,10 +601,14 @@ function Fair() {
     </>
   );
 }
-function ScrollToPage() {
-  const { pathname } = useLocation();
-  useEffect(() => { window.scrollTo({ top: 0, behavior: "instant" }); }, [pathname]);
-  return null;
+function NavIcon({ to }: { to: string }) {
+  const paths: Record<string, string> = {
+    "/explorar": "M3 5l6-2 6 2 6-2v16l-6 2-6-2-6 2V5zm6-2v16m6-14v16",
+    "/tiempo": "M12 8v5l3 2M3 12a9 9 0 1 0 9-9 9 9 0 0 0-9 9",
+    "/rutas": "M6 5h10a4 4 0 0 1 0 8H8a4 4 0 0 0 0 8h10M6 2v6m-3-3h6M18 18v4",
+    "/actividad": "M5 3h14v18H5V3zm3 5 2 2 5-5M8 14h8m-8 3h5",
+  };
+  return <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={paths[to]} /></svg>;
 }
 function App() {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
@@ -591,7 +623,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <ScrollToPage />
+      <JourneyScroll />
       <a className="skip" href="#main">
         Saltar al contenido
       </a>
@@ -608,7 +640,7 @@ function App() {
               ["/actividad", "Quiz"],
             ].map(([to, label]) => (
               <NavLink key={to} to={to}>
-                {label}
+                <NavIcon to={to} /><span>{label}</span>
               </NavLink>
             ))}
           </nav>

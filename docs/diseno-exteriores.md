@@ -4,6 +4,19 @@ Se aplican Taste Skill e Impeccable al producto existente, conservando la paleta
 
 ## Decisiones
 
+Las mejoras de la vista previa se integraron, con autorización del usuario, en `C:\Dev\León_en_el_tiempo\Proyecto_Historia_Leon--main`, la copia utilizada en VS Code. Las pruebas reservan 5187 y 4187 para evitar interferir con otros servidores.
+
+- Catálogo con tarjetas breves y vista de lista compacta. Conserva búsqueda, filtros, selección y posición de lectura durante la sesión; al regresar devuelve el foco a la tarjeta seleccionada.
+- Mapa con pin seleccionado destacado, encuadre recordado y ficha que conserva su tamaño al regresar. Las transiciones son breves y respetan la preferencia de movimiento reducido.
+- Recorridos con estado y avance persistido durante la sesión. Solo la acción explícita «Marcar parada como revisada» aumenta el progreso; abrir una ficha o avanzar no certifica una visita física.
+- Navegación inferior con iconos y etiquetas visibles, conservando los cuatro destinos principales y la paleta existente.
+
+- Mapa más cercano al primer viewport: cabecera breve, búsqueda, filtros avanzados plegables y acceso directo a la lista.
+- Ficha con estados compacta, detalles e historia; controles explícitos de ampliación y cierre. Geolocalización solo por acción del usuario, con recuperación ante permisos denegados y alternativa de seleccionar un lugar como origen.
+- Distancias calculadas geodésicamente y etiquetadas como línea recta. No se generan rutas peatonales ni tiempos sin un proveedor y datos adecuados.
+- Quiz con selección reversible antes de confirmar, feedback sin avance automático, resumen de finalización y retorno al mapa. Avance en sessionStorage, validado contra las preguntas actuales; funciona aunque el almacenamiento esté bloqueado.
+- Línea del tiempo sin repetir el texto del resumen en un desplegable: ampliación condicional al desbordamiento y enlace al siguiente hito.
+
 - Modo claro inicial: blanco, verde profundo #173c37 y terracota #a84d2b. Arena #f6f3eb para superficies de apoyo. Se conserva la preferencia de tema guardada.
 - Georgia para títulos clásicos; Segoe UI/system-ui para lectura e interfaces. Son fuentes locales para funcionar sin conexión y evitar descargas de tipografía.
 - Navegación de cuatro destinos en la parte inferior hasta 760 px; Feria/QR y administración quedan en el pie. Objetivos táctiles de al menos 44 px; controles principales de 48 px.

@@ -20,7 +20,7 @@ npm.cmd run test:e2e
 npm.cmd run preview -- --port 4173
 ```
 
-El build valida TypeScript y genera dist/, incluido el service worker con los recursos locales. Playwright inicia Vite en 5173 y build/preview en 4173 para probar la PWA. PLAYWRIGHT_CHROMIUM_EXECUTABLE permite seleccionar un Chromium ya instalado.
+El build valida TypeScript y genera dist/, incluido el service worker con los recursos locales. Playwright inicia Vite en 5187 y build/preview en 4187 para probar la PWA. PLAYWRIGHT_CHROMIUM_EXECUTABLE permite seleccionar un Chromium ya instalado.
 
 ## Probar la PWA
 
